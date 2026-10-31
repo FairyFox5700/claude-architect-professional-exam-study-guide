@@ -1,0 +1,4 @@
+_pdf_build_html/
+_pdf_manifest.json
+__pycache__/
+*.pyc
