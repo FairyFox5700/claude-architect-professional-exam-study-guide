@@ -171,6 +171,28 @@ D. A promise that costs will never increase
 **Answer:** B
 **Explanation:** Useful cost documentation itemizes the cost drivers and underlying assumptions so stakeholders can evaluate and re-forecast total cost of ownership as conditions change. A single undifferentiated figure or a no-cost-growth promise (A, C, D) doesn't support informed ongoing vendor management.
 
+### Q16.
+As part of a handover package for a logistics client's AI routing assistant, the departing architect includes a note offering a dedicated office-hours slot and a named contact for any future questions, in place of writing out certain configuration rationale. Why is this an inadequate substitute for documentation?
+
+A. It is adequate, since a live contact can always answer more thoroughly than a document
+B. A route for asking a question is not the same as answering it; it converts written knowledge into a dependency on a specific person being available, which fails once that person leaves or is unavailable
+C. Office hours are a documented and auditable artifact under most compliance frameworks
+D. It is inadequate only because office hours are inconvenient to schedule
+
+**Answer:** B
+**Explanation:** A named contact or office-hours slot supplies a way to ask a question, not an answer, and a question that still has to be asked has not actually been documented — the knowledge quietly depends on one person's continued availability. This is a known handover anti-pattern regardless of how convenient the contact's schedule is (D) or how thorough they might be in person (A, C).
+
+### Q17.
+A telecom's on-call engineers are repeatedly paging the architect at all hours after a production AI assistant's answer quality degrades following unrelated upstream changes. What is the best long-term fix?
+
+A. Keep the architect permanently on the on-call rotation so they can respond personally each time
+B. Build a runbook mapping common symptoms to likely architectural causes (e.g., retrieval failure, prompt version, model change, tool errors), paired with dashboards and an eval command the on-call team can run themselves to diagnose and act
+C. Automatically disable the assistant the moment any quality metric drops, with no further process
+D. Move to a more capable model so the issue stops recurring
+
+**Answer:** B
+**Explanation:** A structured runbook that maps symptoms to causes and equips on-call staff with the diagnostic tools (traces, dashboards, an eval they can run) lets the team resolve incidents independently, which is the actual goal of operational documentation. Keeping the architect permanently on call (A) does not scale and defeats the purpose of a handover, blind model swaps (D) treat a symptom without diagnosis, and automatic shutdowns with no process (C) just replace one incident with another.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

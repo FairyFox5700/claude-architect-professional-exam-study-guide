@@ -210,3 +210,38 @@ D. Routing is the correct pattern because the checklist determines which of seve
 
 **Answer:** A
 **Explanation:** When there is a well-defined, repeatable evaluation criterion (the completeness checklist) and documented evidence that first drafts frequently fail it, structuring the system as generate-then-critique-then-revise directly targets the observed rework problem and is the textbook justification for evaluator-optimizer. B dismisses a real, measurable benefit, C ignores the explicit evaluation signal, and D misapplies routing, which selects between distinct paths rather than iteratively refining a single draft.
+
+### Q19.
+An architect is designing a Claude-based knowledge assistant for an IT helpdesk. Traffic analysis shows two distinct query shapes hitting the same system: technicians searching for an exact asset tag or ticket number, and technicians asking conceptual questions like "how do we usually handle a failed RAID rebuild." Which retrieval design BEST serves both query shapes within the overall architecture?
+
+A. Use semantic embedding search for all queries, since it is the more modern retrieval approach
+B. Use exact/lexical lookup for all queries, since asset tags and ticket numbers must never be mismatched
+C. Preserve both an exact-match lookup path for identifier-style queries and a semantic-embedding path for conceptual queries, and route each incoming query to the matching strategy
+D. Pick whichever single strategy performed better in a one-time benchmark and standardize on it going forward
+
+**Answer:** C
+**Explanation:** A single corpus commonly carries two opposite query shapes: identifier lookups need exact matching because embedding discards the surface form that makes an identifier meaningful, while conceptual questions need semantic matching because the relevant words may never appear in the source text; the correct design keeps both strategies and routes each query to the one that fits, rather than forcing all traffic through one approach. A fails every exact identifier lookup by blurring codes into their neighbors, B fails every conceptual question because the matching vocabulary is absent, and D locks in a single-strategy choice that will silently fail whichever query shape the benchmark did not emphasize.
+
+### Q20.
+A retailer's Claude-based assistant answers "how many units of SKU 48213 are currently in the warehouse" by retrieving from a nightly-refreshed document index that was built by exporting inventory snapshots into searchable text. The index returns a confident, well-cited answer, but the number is frequently wrong because inventory changes continuously throughout the day. What is the architecturally correct fix?
+
+A. Rebuild the index more frequently, for example every hour instead of nightly
+B. Add a disclaimer to every answer noting that the data may be out of date
+C. Replace the indexed-retrieval approach for this specific fact with a live tool call to the inventory system of record, since inventory changes faster than any practical rebuild cadence can track
+D. Increase the number of citations returned so the user can judge data freshness themselves
+
+**Answer:** C
+**Explanation:** Retrieval applied to live state is a structural mismatch, not a cadence problem: an index is a snapshot, and when the underlying data changes faster than any rebuild schedule, the fix is to route that specific fact to a tool call against the system that owns it so the answer reflects the current state rather than a point-in-time export. A only narrows the staleness window without eliminating the architectural flaw, and B and D leave the same stale, if well-presented, answer in place rather than fixing it.
+
+### Q21.
+A customer-support agent's toolset has grown over several quarters to include billing tools, shipping tools, returns tools, loyalty-program tools and technical-troubleshooting tools, all accessible to a single agent. The team notices the agent increasingly selects the wrong tool for a given request, and the error rate has grown roughly in step with the number of unrelated tool domains added, not with how the tools are worded. The team's first attempt — rewriting tool descriptions to be more detailed — made no measurable difference. What is the MOST likely effective fix?
+
+A. Keep rewriting and lengthening the tool descriptions until the model stops making mistakes
+B. Add several few-shot examples of correct tool selection to the system prompt
+C. Split the single agent's tool access along genuine domain boundaries (for example, a billing-focused agent and a shipping/returns-focused agent) so that any one agent chooses among fewer unrelated domains at once
+D. Add a routing instruction to the system prompt telling the model to "think carefully" before selecting a tool
+
+**Answer:** C
+**Explanation:** Tool-selection confusion scales with the number of unrelated domains sharing one context, not with how those tools are described, so the durable fix reduces what any single agent must choose among by splitting along genuine domain boundaries — one of the few cases where adding another agent is justified, because the domains are truly separable work rather than an organizational artifact. A, B and D all leave the crowded tool surface intact and have already been shown, in this scenario, not to move the error rate.
+
+---

@@ -171,6 +171,28 @@ D. The agent should instead be given more autonomy to reduce latency in emergenc
 **Answer:** B
 **Explanation:** For safety-critical, high-consequence, hard-to-reverse physical actions, mandatory human approval remains warranted because simulated success does not guarantee coverage of all real-world edge cases, and the asymmetric cost of a rare failure justifies the friction. A, C, and D understate the real risk involved.
 
+### Q16.
+A bank designs its human-review routing primarily around transaction dollar amount: anything under $1,000 is auto-approved, anything over is queued for a reviewer. Under this scheme, a $5 outbound email blast that mistakenly broadcasts a wrong promotional rate to 10,000 customers and cannot be unsent is auto-approved, while a $50,000 internal ledger reclassification that can be fully reversed before end-of-day batch close sits in the review queue. What is wrong with this design, and what should replace it?
+
+A. Nothing is wrong; dollar amount is always the correct proxy for risk
+B. Routing by transaction size is the wrong axis; review gates should instead be set according to whether the action's outcome can be undone and how far its effects spread, since a small irreversible external action can carry far more harm than a large reversible internal one
+C. The thresholds are simply set too low and should be raised
+D. The bank should remove human review entirely and rely on the model's own judgment
+
+**Answer:** B
+**Explanation:** Transaction size does not correlate with actual risk; the correct routing axis is reversibility and blast radius, since a small but irreversible, widely-propagating action (like an erroneous mass email) can cause far more harm than a large but easily reversible internal change. A and C preserve the flawed axis, and D removes oversight entirely rather than correcting its targeting.
+
+### Q17.
+A SaaS company's agent workflow requires a human manager's approval before an agent can apply a high-impact infrastructure change, but managers often take several hours to respond given time zone differences, and the team does not want to keep a compute process alive and billing the whole time waiting on a response. What approval-handling pattern addresses this without treating a slow reviewer as a systemic failure?
+
+A. Automatically approve the change if the manager hasn't responded within 10 minutes
+B. Design the approval step so it can return a deferred response: the process exits (or pauses cheaply) and resumes later from persisted session state once the approval arrives, paired with a notification (e.g., Slack, email, or push) so the pending request is not invisible while waiting
+C. Require the agent to keep polling in a tight loop indefinitely until approval is granted
+D. Remove the approval requirement for any change proposed outside business hours
+
+**Answer:** B
+**Explanation:** A robust human-in-the-loop design should support deferred/asynchronous approval — exiting or pausing the process and resuming from durable state once a decision is made — combined with proactive notifications so a slow human reviewer is a configuration detail, not an architectural failure. A and D silently bypass the control under time pressure, and C wastes resources without actually solving the latency problem.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

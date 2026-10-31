@@ -171,6 +171,28 @@ D. Reviewing the model provider's general safety whitepaper
 **Answer:** B
 **Explanation:** Ongoing assurance requires continuous monitoring, incident detection, and recurring adversarial testing as guardrails evolve and new attack techniques emerge — a one-time test or document review is a point-in-time snapshot, not continuous assurance. A, C, and D do not provide evidence of current, ongoing effectiveness.
 
+### Q16.
+A fintech company's Claude integration occasionally has requests blocked by the model's built-in safety classifiers. The application layer currently treats any HTTP 200 response as a successful answer and displays the response body directly to the end user, without inspecting it further. QA later discovers that some of these "successful" responses were actually refusals, and the conversation kept failing on retry with the same error. What is the correct architectural fix?
+
+A. Switch to treating any non-200 status code as the refusal signal instead
+B. Explicitly check the response's `stop_reason` field for a refusal value even on HTTP 200 responses, and when a refusal occurs, reset the conversation by removing or rephrasing the triggering turn before continuing, rather than resending the same context unchanged
+C. Increase the request timeout so the classifier has more time to approve the request
+D. Disable the safety classifier for this application since it interferes with the user experience
+
+**Answer:** B
+**Explanation:** Because refusals are returned as HTTP 200 with a distinguishing `stop_reason`, the application must instrument that field specifically rather than assuming any 200 response succeeded, and must reset the offending conversation turn before retrying since resending unchanged context tends to trigger the same refusal again. A misunderstands how refusals are signaled, and C and D do not address the detection and recovery gap.
+
+### Q17.
+An online marketplace's trust-and-safety team hardens its input-screening classifier after several successful jailbreak attempts are reported. Three months later, customer support escalations reveal that a significant number of entirely legitimate seller inquiries are now being blocked by the same classifier. Leadership asks how to evaluate whether the guardrail is correctly tuned. What is the most appropriate practice?
+
+A. Continue tightening the classifier's sensitivity until zero jailbreak attempts succeed, regardless of other effects
+B. Measure the classifier's false-refusal (over-refusal) rate against a labeled set of known-legitimate requests, alongside its jailbreak catch rate, and tune thresholds to balance both rather than optimizing catch rate alone
+C. Remove the classifier since it is now causing customer complaints
+D. Tell affected users to rephrase their questions until the classifier allows them through
+
+**Answer:** B
+**Explanation:** A guardrail's effectiveness must be evaluated on both dimensions it affects — how well it catches genuine attacks and how often it incorrectly blocks legitimate requests — so measuring the false-refusal rate on a labeled benign set is necessary to tune thresholds responsibly. A ignores the usability cost entirely, and C and D abandon or offload the problem instead of fixing the guardrail's calibration.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

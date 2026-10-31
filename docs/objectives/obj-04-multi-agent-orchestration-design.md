@@ -171,6 +171,39 @@ D. Abandon the entire task and return no output at all
 **Answer:** B
 **Explanation:** Transparent handling of partial failures — communicating exactly what succeeded and what did not, with a retry or clearly flagged gap — preserves trust and usability even under degraded conditions. A fabricates completeness dishonestly, C provides no path to recovery, and D discards legitimate partial value unnecessarily.
 
+### Q16.
+A company is considering splitting its single customer-service agent into three separate department-specific agents (billing, technical support, retention) purely because the organization has three separate teams that each want ownership of "their own" agent. The task itself — answering a customer's question — has no contradictory instructions or tool-access requirements across departments, and tickets are not independent of each other (the same conversation often spans all three topics). What is the BEST assessment?
+
+A. The split is justified because team ownership and organizational structure are sufficient reasons to create separate agents
+B. The split is not justified by the task itself; only irreconcilable specialization (contradictory instructions or tool access) or genuine independence between subtasks justify a second agent, and organizational boundaries like team ownership are facts about the company, not evidence that one agent is insufficient
+C. The split is justified because three agents will always be more accurate than one
+D. The split is justified because more agents always reduce latency
+
+**Answer:** B
+**Explanation:** Only two properties of the work itself justify splitting into multiple agents: instructions or tool access that genuinely cannot coexist, or sub-tasks that are truly independent of one another; team structure, headcount and departmental ownership describe the organization rather than the task and do not establish that a single agent falls short, especially when conversations span all three topics and thus are not independent. A, C and D all offer reasons unrelated to a genuine architectural requirement.
+
+### Q17.
+A coordinator in a retail-operations system sends three tool calls to subagents in a single turn: a price-check, an inventory-check, and a promotion-eligibility check. The coordinator decides not to execute the promotion-eligibility check because the promotions service is under maintenance. What is the coordinator REQUIRED to do with that declined call?
+
+A. Omit any result for the declined call, since it was never actually executed
+B. Still return a result for the declined call in the next message, matched to its call identifier and marked as an error with a brief explanation, alongside the results for the two calls that did run
+C. Wait indefinitely until the promotions service comes back online before responding at all
+D. Fabricate a plausible promotion-eligibility result so the response looks complete
+
+**Answer:** B
+**Explanation:** When multiple tool calls are issued in one turn, every call must receive a matched result in the next message, including calls that were deliberately not run, which must still be returned as an error result with a brief explanation; silence is not a valid response to any call. A leaves an unresolved call the system cannot reconcile, C stalls the entire turn over one declined call, and D introduces fabricated data that misrepresents an unavailable check as a completed one.
+
+### Q18.
+A logistics company's multi-agent system imposes a per-subagent task budget intended to cap how many tokens a research subagent can consume during a long investigation. The architect is told this budget must act as an absolute, unbreakable ceiling that can never be exceeded under any circumstance. What should the architect point out?
+
+A. Task budgets are exactly the right mechanism for an absolute, unbreakable ceiling
+B. A task budget is a soft hint that paces the model but that the model may exceed when stopping mid-action would be more disruptive than finishing; if an absolute hard limit is required, it must be enforced through the request's maximum token setting instead
+C. There is no way to limit token consumption in a multi-agent system
+D. Task budgets and maximum token settings are two names for the same mechanism with identical enforcement guarantees
+
+**Answer:** B
+**Explanation:** A task budget is documented as a soft, self-paced allowance that the model may exceed rather than a hard enforcement mechanism, so a genuine hard ceiling on spend must come from the request's maximum token setting, which is the actual enforced limit. A misstates the budget's guarantee, C ignores a real control that does exist (just not the one asked for), and D collapses a meaningful distinction between a soft pacing hint and a hard cap.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

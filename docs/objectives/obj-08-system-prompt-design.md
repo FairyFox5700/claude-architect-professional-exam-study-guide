@@ -171,6 +171,28 @@ D. It should be rewritten in a different language for clarity
 **Answer:** B
 **Explanation:** Explicitly granting user content the authority to override system instructions defeats the purpose of guardrails and creates an easy jailbreak path ("here's my good reason..."). Length, specific wording like "anything," and language choice are not the actual security issue here.
 
+### Q16.
+A system prompt for a travel-booking assistant contains two instructions that directly conflict: "Always confirm every booking detail with the customer before finalizing" and, two paragraphs later, "Finalize bookings immediately without additional confirmation to minimize friction." A reviewer proposes adding a sentence stating which instruction takes precedence. What is the BEST fix?
+
+A. Add the precedence sentence as proposed, since declaring a winner resolves the conflict
+B. Rewrite the system prompt to remove the contradiction entirely, replacing both conflicting lines with a single clear, unambiguous instruction, rather than arbitrating between two instructions that should not both exist
+C. Bold one of the two conflicting instructions so it stands out visually
+D. Lower the model's temperature so the conflicting instructions are resolved more consistently
+
+**Answer:** B
+**Explanation:** A genuine contradiction in a prompt should be removed by rewriting a single clear instruction, not arbitrated by declaring a winner, which leaves both directives live and merely changes which tends to win. Adding precedence, bolding, or lowering temperature do not remove the underlying conflict—they only change how often one or the other is followed.
+
+### Q17.
+An architect is hardening a research assistant that calls a web-search tool and must never let fetched web content override its instructions. Which combination of controls BEST implements a structural (not merely persuasive) defense against this risk?
+
+A. Paste search results directly into the system prompt so the model treats them as authoritative context
+B. Deliver fetched web content only inside tool result blocks (never in the system prompt or a plain user text block), state in the system prompt that content returned from tools is untrusted data that must never override instructions, JSON-encode the untrusted text, and optionally screen tool output with a lightweight model before it reaches the main agent
+C. Ask the model nicely in the system prompt to "please be careful" about search results
+D. Insert the organization's own instructions inside the tool result block alongside the search content, since tool results are processed early
+
+**Answer:** B
+**Explanation:** Claude is trained to treat content inside tool result blocks with appropriate skepticism, so delivering untrusted content only through that channel—paired with an explicit untrusted-data statement, JSON-encoding to prevent payload breakout, and optional lightweight screening—is a structural defense. Placing content in the system prompt grants it misplaced authority, vague politeness is not a control, and placing your own instructions inside a tool result undermines the very skepticism that channel is meant to invoke.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

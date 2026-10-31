@@ -119,3 +119,25 @@ D. A permission rule is silently blocking instruction-following
 
 **Answer:** A
 **Explanation:** Long sessions can exhaust usable context, causing earlier instructions to fade from effective attention; the correct fix is managing context (reset/summarize) and anchoring durable guidance in CLAUDE.md so it persists reliably. Reinstalling software, MCP outages, and permission rules would produce distinctly different symptoms (crashes, tool errors, access denials) rather than a gradual drift in instruction adherence.
+
+### Q11.
+A regulated enterprise wants to centrally govern which Claude Code plugins (bundles of skills, commands, subagents, hooks, and MCP servers) developers can install, restricting installation to a single internally vetted marketplace and blocking all public ones — and also wants session startup to fail rather than silently use stale policy if the managed-settings server is unreachable. Which pair of managed-settings capabilities together satisfies both requirements?
+
+A. A CLAUDE.md note about approved plugins, plus a longer session timeout
+B. Marketplace allow/deny controls (e.g., `strictKnownMarketplaces` / `blockedMarketplaces`) to govern plugin sources, plus `forceRemoteSettingsRefresh` to fail closed when current org policy cannot be fetched
+C. Giving every developer admin rights to self-manage plugin installation
+D. Disabling the Skills feature organisation-wide so no plugins can ever be used
+
+**Answer:** B
+**Explanation:** Marketplace allow/deny settings constrain which plugin sources are reachable at all, while `forceRemoteSettingsRefresh` ensures a session won't start under potentially outdated cached policy if the managed-settings server can't be reached — together these are the enforced, technical controls for this governance requirement. CLAUDE.md notes are advisory, admin self-management reintroduces the ungoverned risk, and disabling Skills entirely discards legitimate productivity capability instead of scoping the real risk.
+
+### Q12.
+A team wants Claude Code to automatically review every pull request in CI without a human at the keyboard, but is also worried that the same session that authored a change could review its own work and miss the same blind spots, and separately wants to ensure that if CI ever checks out an untrusted third-party contribution, that repo's own hooks or MCP servers can't silently auto-execute. Which combination of practices addresses both concerns?
+
+A. Run the review as an independent headless-mode step (e.g., `claude -p` with JSON output and a scoped tool allowlist) separate from the authoring session, and use bare mode to suppress auto-discovery of repo-defined hooks/skills/commands/subagents/plugins/MCP servers when running against untrusted checkouts
+B. Let the authoring session also perform and approve its own review to save pipeline time
+C. Disable CI automation entirely and require fully manual review of every PR, including untrusted ones
+D. Grant the CI service account full admin credentials so any required action can run without friction
+
+**Answer:** A
+**Explanation:** An independent headless review step avoids the self-review blind-spot problem, and bare mode specifically closes the risk of an untrusted repository's own hooks, skills, or MCP servers auto-loading and executing during a non-interactive CI run — these are two distinct, composable safeguards for two distinct risks. Letting the author review itself reintroduces blind spots, fully manual review forfeits the automation benefit, and broad admin credentials violate least-privilege regardless of the other concerns.

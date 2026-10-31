@@ -171,6 +171,28 @@ D. Number of API calls per day
 **Answer:** B
 **Explanation:** Cost per successful task combines economic efficiency with outcome quality, preventing optimizations that merely shift cost without preserving (or at the expense of) task success. The other metrics each capture only one dimension (raw usage, speed, or call volume) without connecting it to whether the task was actually accomplished.
 
+### Q16.
+A legal-tech company's architect proposes a "cheap-first, escalate-on-failure" strategy for its document-classification task: run every request on a cheaper, faster model first, and only re-run it on the larger, more expensive model when a reliable failure signal detects the cheap model likely got it wrong. What is the essential prerequisite for this strategy to actually reduce cost per successful task rather than just adding latency?
+
+A. The strategy works automatically regardless of whether failures can be detected
+B. A trustworthy, low-false-negative failure-detection signal to decide when escalation is needed; without it, failed outputs go uncaught and savings don't translate into reliable successful outcomes
+C. The cheap model must always be slower than the expensive model
+D. The strategy only works if both models are identical in capability
+
+**Answer:** B
+**Explanation:** The cost savings of a cheap-first-with-retry approach depend entirely on being able to detect, with high reliability, when the cheap model's output is likely wrong so the small fraction of failures can be escalated; without such a detector, undetected failures silently reduce quality instead of being caught and retried. The strategy's benefit is not automatic, is unrelated to relative model speed, and does not require the two models to have identical capability — in fact it depends on their capability being different.
+
+### Q17.
+An operations team tries to move its nightly batch-API document-summarization job to also accept a "fast streaming" response mode and a stateful conversation-thread parameter that work fine in its real-time chat product. Both are rejected by the batch API with validation errors. What is the underlying architectural reason?
+
+A. The batch API is simply broken and should be reported as a bug
+B. Streaming, fast-mode, and stateful/session parameters are designed for synchronous, real-time interaction; asynchronous batch processing has no live connection or session to stream to or maintain state within, so these parameters don't apply
+C. Batch processing and streaming are two names for the same underlying mechanism
+D. The fix is to always use real-time calls instead of batch for every workload
+
+**Answer:** B
+**Explanation:** Streaming, low-latency "fast" modes, and stateful session parameters all assume an open, synchronous connection to progressively deliver or maintain context for a single live caller — a model of interaction that asynchronous, queued batch processing does not provide, which is why those parameters are rejected rather than silently ignored. This is expected, intentional behavior rather than a bug, the two mechanisms are not interchangeable, and abandoning batch processing would forfeit its cost/throughput advantages for workloads that don't need real-time responses.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

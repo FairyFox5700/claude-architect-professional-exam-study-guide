@@ -171,6 +171,28 @@ D. Keep the current configuration since 24-hour access tokens are an industry be
 **Answer:** B
 **Explanation:** Short-lived access tokens combined with rotating, expiring refresh tokens limit the damage window if a token is compromised while preserving a good user experience (no excessive re-authentication). Indefinite access tokens dramatically increase compromise risk, eliminating refresh tokens harms usability without proportional security benefit, and a flat "24-hour access token" rule ignores that appropriate lifetimes vary by risk/sensitivity of the operation.
 
+### Q16.
+A security review of a remote MCP server finds that it simply forwards whatever bearer token the calling client sends along to the downstream internal API it wraps, rather than validating the token's intended audience or exchanging it for its own credential. What is this pattern called, and why is it dangerous?
+
+A. "Token delegation," and it is safe because the downstream API performs its own signature check
+B. "Token passthrough," an explicitly forbidden anti-pattern because it circumvents audience-based controls, can cause downstream logs to show requests under the wrong identity, and turns the server into a potential exfiltration proxy for tokens it never validated
+C. "Token federation," a recommended best practice for simplifying multi-service authentication
+D. This is harmless as long as the connection uses TLS
+
+**Answer:** B
+**Explanation:** Token passthrough — accepting a client-supplied token and forwarding it downstream without validating that it was actually issued for this server — is a named, explicitly forbidden anti-pattern precisely because it breaks audience validation, enables confused-deputy scenarios, obscures true caller identity in downstream logs, and lets a compromised or malicious client use the server as a conduit for tokens it should never have accepted. TLS protects data in transit but says nothing about whether the token itself was validated, and this is not a legitimate delegation or federation pattern — it is the specific failure those patterns are designed to prevent.
+
+### Q17.
+An architect designing OAuth scopes for a new Claude-integrated expense-reporting agent is deciding between requesting every scope the downstream finance API offers at initial setup ("read all ledgers, approve payments, modify vendor records") versus starting narrow. The team worries that requesting additional scopes later will interrupt users. What is the recommended mitigation pattern?
+
+A. Request the broadest possible scope set up front so no future re-consent is ever needed, accepting the larger blast radius
+B. Grant a minimal initial scope set, allow targeted incremental elevation only when a specific task genuinely requires it, and log every elevation event, so broad access is never assumed and every expansion leaves an audit trail
+C. Request minimal scopes initially but provide no mechanism to ever elevate them, forcing users to re-authenticate from scratch for any new capability
+D. Skip scope design entirely and rely on the finance API's own internal business logic to silently ignore inappropriate requests
+
+**Answer:** B
+**Explanation:** The documented mitigation for scope-creep risk requires all three elements together: a minimal initial scope set, a targeted path for incremental elevation when genuinely needed, and logging of every elevation event — minimal scopes without an elevation path break legitimate functionality, while elevation without logging destroys the audit evidence needed to detect abuse. Requesting everything up front maximizes blast radius and makes revocation disruptive to every workflow at once, and relying on the downstream API to silently absorb over-broad requests is not a substitute for proper scope governance at the integration layer.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

@@ -210,3 +210,36 @@ D. Full reliance on the model provider to handle all evaluation and monitoring
 
 **Answer:** B
 **Explanation:** Mature evaluation and optimization practice integrates dataset design, calibrated grading, rigorous experimentation, and continuous production monitoring into one ongoing cycle, giving both pre-launch rigor and post-launch visibility. Logging alone, ad hoc manual tracking, or fully outsourcing responsibility to the provider all leave significant gaps across the domain's lifecycle.
+
+### Q19.
+A manufacturing company's architect, mid-way through an A/B test of a new diagnostic prompt, notices after just 40 sessions that the new variant is pulling ahead and wants to stop the test early and roll it out fully, reasoning that the pinned base model hasn't changed so any difference must be due to the prompt. What two distinct risks does this decision combine?
+
+A. There is no risk; a pinned model guarantees the comparison is valid regardless of sample size
+B. Stopping based on a result observed only after informally watching the data (rather than a pre-set stopping rule) risks mistaking noise for a real effect, and the untested assumption that "pinned model means no other variable changed" ignores that serving infrastructure can shift independently of the model ID
+C. The only risk is that 40 sessions is numerically too small; there is no issue with the reasoning about the model
+D. Both risks are irrelevant because any statistically convenient stopping point is acceptable once a test is running
+
+**Answer:** B
+**Explanation:** This scenario combines two separate pitfalls: declaring a winner based on an informally observed in-flight result rather than a stopping rule fixed in advance (optional stopping, which inflates false positives), and assuming a pinned model ID guarantees no other variable changed, when serving-layer infrastructure (routing, classifiers, decoding logic) can shift independently of the model itself. Treating the pinned model as a complete guarantee, or treating sample size as the only issue, both miss one of the two distinct risks present.
+
+### Q20.
+A government agency wants to adopt a "cheap-first, escalate-on-failure" routing strategy to cut cost per successful task for its citizen-inquiry chatbot, and plans to validate it by running it offline against the existing curated evaluation set, where it performs well. What should the architect add before trusting this validation, and what monitoring should accompany the eventual rollout?
+
+A. Nothing further is needed; strong offline results on the existing evaluation set are sufficient for both validation and ongoing monitoring
+B. A reliable failure-detection signal to actually trigger escalation (since offline success alone doesn't prove the detector works on live inputs), a capped and monitored production exposure to surface real-world cases the offline set never saw, and content-level quality monitoring rather than operational counters alone, since uptime/latency/error-rate dashboards would not reveal a drop in answer correctness
+C. Only operational dashboards (latency, uptime, error rate) are needed post-rollout, since the offline evaluation already confirmed quality
+D. The offline evaluation set should be discarded once the new strategy is adopted, since the model is now different
+
+**Answer:** B
+**Explanation:** Offline evaluation on a fixed set cannot confirm the escalation strategy's two real dependencies — a working failure detector and behavior on previously unseen live inputs — so a capped, monitored production exposure is needed to supply that missing evidence; and because operational dashboards cannot detect quality regressions (only whether the system is up and fast), content-level monitoring (sampled grading, complaint correlation) must accompany the rollout. Relying solely on the prior offline result, trusting only operational counters, or discarding the evaluation set entirely would each leave a real validation or monitoring gap unaddressed.
+
+### Q21.
+An insurance company's architect is asked to justify, end-to-end, why a newly proposed cost-optimization change (routing simple claims to a cheaper model, with escalation on detected failure) is safe to roll out company-wide. Which chain of evidence is most defensible?
+
+A. A single offline benchmark run showing improved cost per successful task is sufficient justification for full rollout
+B. Offline evidence of cost/quality trade-offs on the representative and edge-case evaluation set, a pre-registered A/B test with a fixed sample size and locked guardrail metrics (including the failure-escalation rate) run on randomized concurrent traffic, and post-rollout production monitoring (content-quality sampling plus regression detection) rather than operational counters alone
+C. Skipping the A/B test entirely since the offline evaluation already proves the change works
+D. A single anecdotal report from one engineer who tried the new routing strategy once
+
+**Answer:** B
+**Explanation:** A defensible end-to-end justification chains together offline evaluation (quality/cost trade-off on representative and edge cases), a properly powered and pre-registered controlled experiment with guardrails fixed in advance, and continued production monitoring that inspects actual output content rather than relying only on operational health signals — each stage catches issues the others cannot. A single offline run, skipping controlled experimentation, or relying on one anecdotal report each leave significant, previously-identified gaps (sample size rigor, live-traffic validation, or quality-blind operational monitoring) unaddressed.

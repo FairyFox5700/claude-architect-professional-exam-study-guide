@@ -171,6 +171,39 @@ D. Ask the user to manually extract and paste just the relevant clause themselve
 **Answer:** B
 **Explanation:** One-time processing/indexing followed by targeted retrieval per question is the efficient pattern for handling long pasted documents across a multi-turn conversation. Resending the full document every turn wastes enormous context, refusing to process it fails the user's legitimate request, and requiring the user to manually extract clauses defeats the purpose of using the assistant.
 
+### Q16.
+An architect loads an entire 80,000-token internal wiki into a research agent's context "just in case," even though most queries only need a small fraction of it. Users report that the agent sometimes fails to use information that is clearly present in the middle of the loaded material, while information near the beginning and end of the context still gets used correctly. What does this symptom MOST likely indicate?
+
+A. A hardware failure in the model-serving infrastructure
+B. The context window is being treated as storage rather than working memory; recall degrades as token count grows, and it degrades unevenly, with content in the middle of a long loaded collection becoming less likely to be used even though nothing has technically failed or errored
+C. The wiki content must be corrupted, since the model would otherwise use all of it equally
+D. This is expected and has no relationship to how much content was loaded into the window
+
+**Answer:** B
+**Explanation:** This is the documented "lost in the middle"/working-memory-cliff phenomenon: adding more context is not automatically better, accuracy and recall degrade as token count grows, and the degradation is silent and uneven, with middle content becoming unreliable first while the ends still work. It is not a hardware issue or data corruption, and reducing what enters the window per request—not re-ordering or re-emphasizing content—is the real fix.
+
+### Q17.
+An architect is building a service that generates very long reports and wants to understand the failure behavior when a request approaches the context window limit. Which statement correctly distinguishes the two ways a request can exceed the window?
+
+A. Both input-only overflow and input-plus-output overflow always return the same generic 400 error with no distinction
+B. If the input alone exceeds the window, the request fails immediately with a 400 invalid request error; if input plus max_tokens would exceed the window, some newer models instead accept the request, run it, and stop generation with a `model_context_window_exceeded` stop reason once the limit is actually reached, so a caller that checks only HTTP status may mistake a truncated response for a complete one
+C. Exceeding the window is never possible because models automatically truncate input silently with no indication at all
+D. Only output overflow is ever rejected; input overflow is always silently ignored and processed anyway
+
+**Answer:** B
+**Explanation:** Documented behavior distinguishes the two failure modes precisely: input-only overflow is rejected up front with a 400 error, while input-plus-max_tokens overflow on newer models is accepted and only stops mid-generation with a specific stop reason, which a caller checking only for HTTP errors could misinterpret as a complete answer. The other options collapse or invert this distinction.
+
+### Q18.
+An architect configures automatic compaction for a long-running agent and writes custom `instructions` to additionally capture a specific "open commitments" list whenever compaction runs. After deployment, the team notices the agent sometimes loses track of its next steps and overall task state, which did not happen before the custom instructions were added. What is the MOST likely cause?
+
+A. Custom compaction instructions supplement the default summarization prompt automatically, so this cannot be the cause
+B. Custom instructions supplied through the `instructions` parameter REPLACE the default summarization prompt entirely rather than adding to it, so the team's new instruction silently discarded the default behavior of recording state, next steps, and learnings needed to continue the task
+C. Compaction never removes any prior content, so state loss must come from an unrelated bug
+D. The architect should have used context editing instead, since compaction and context editing are functionally identical
+
+**Answer:** B
+**Explanation:** Custom compaction instructions replace the default summarization prompt completely rather than supplementing it, so adding one new instruction without also including the default guidance to record state, next steps, and learnings silently drops that default behavior, explaining the regression. Custom instructions do not merge with the default, compaction does drop prior content blocks before the compaction point, and compaction/context editing are distinct mechanisms (summarizing vs. selectively removing) rather than identical.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

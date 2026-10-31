@@ -176,3 +176,36 @@ D. "Minimize cost above all else by always choosing the cheapest model and short
 
 **Answer:** B
 **Explanation:** This answer integrates all five objective areas coherently: proportional model selection, trust-boundary guardrails, diagnosis-driven technique choice, active context optimization, and systematic reuse/versioning—reflecting genuine trade-off-aware architecture. Maximizing everything (A) ignores cost/latency trade-offs and injection risk, forcing total uniformity (C) ignores real differences across use cases, and minimizing cost unconditionally (D) risks quality and compliance failures on tasks that genuinely require more capability or context.
+
+### Q16.
+An architect is designing a multi-step agentic research assistant that performs many sequential tool-use round trips per task, uses the effort parameter for reasoning depth, and must have overall spend predictable per task rather than per request. Which combined configuration BEST achieves this?
+
+A. Set max_tokens once at task start and assume it caps the entire multi-step loop, while leaving effort unset
+B. Use a task budget to bound the full agentic loop's combined thinking, tool-call, and output spend across however many round trips occur, set effort to a level appropriate to each step's actual difficulty rather than always max, and remember that thinking tokens are billed as output tokens that also count against each request's own max_tokens
+C. Rely solely on per-request max_tokens values, since task budgets do not exist as a documented mechanism
+D. Set effort to max for every step to guarantee the best possible answer regardless of task difficulty or cost
+
+**Answer:** B
+**Explanation:** Because max_tokens applies per request rather than across an entire agentic loop, a task budget is the documented mechanism for bounding total spend across many round trips, while effort should be tuned to each step's actual reasoning demand since thinking tokens are billed as output and compete with the per-request max_tokens ceiling. Assuming a single max_tokens value caps the whole loop is incorrect, task budgets are a real mechanism, and maximizing effort everywhere wastes cost on steps that don't need deep reasoning.
+
+### Q17.
+A platform team caches a large, stable system prompt and tool-definition block for a customer-support agent, and separately ships a specialized "escalation-drafting" capability as a versioned Claude Skill loaded only when needed. After adding one new tool and publishing an unpinned update to the Skill, cache hit rates drop sharply and the team is confused because "the cached content didn't get smaller." What is the BEST explanation?
+
+A. Cached content still occupies the context window and caching only affects what is charged for those tokens, not whether they count or whether they remain valid; cache prefixes are built in a fixed order (tools, then system prompt, then messages) so the new tool invalidates everything after it, and Skills render into the system prompt in a fixed order too, so an unpinned Skill update that changes a rendered description can also invalidate the cached prefix
+B. Caching failures are always random and cannot be explained by any configuration change
+C. Adding a tool or publishing a new Skill version can never affect prompt caching, since caching only depends on the user's message content
+D. The drop must be due to the context window shrinking, since caching reduces the available window size
+
+**Answer:** A
+**Explanation:** Both documented mechanics apply simultaneously here: tool definitions sit earliest in the fixed cache-prefix order so adding one invalidates everything downstream, and an unpinned Skill version change can alter what renders into the system prompt (itself part of that fixed order), also invalidating the cache; separately, cached tokens still occupy the window even though their billing is discounted. Caching issues are traceable to specific configuration changes, both tool and Skill changes can affect the cache, and caching does not change the window's size.
+
+### Q18.
+A legal research assistant retrieves documents via a search tool and must never let fetched text override its instructions, while also needing every final answer in a strict JSON schema for downstream systems. Which combined design BEST addresses both requirements?
+
+A. Insert search results directly into the system prompt, and leave the output format unspecified so the model can decide
+B. Deliver fetched documents only inside tool result blocks, explicitly state in the system prompt that tool-returned content is untrusted data that must never override instructions, optionally screen tool output with a lightweight model before it reaches the main agent, and separately enforce a strict JSON schema (with case-insensitive handling of any enum fields) for the final answer via structured outputs
+C. Put the organization's own formatting instructions inside the tool result block next to the search content, since tool results are processed first
+D. Skip schema enforcement entirely since structured outputs cannot coexist with tool-use workflows
+
+**Answer:** B
+**Explanation:** The documented structural defense against injected content is to deliver untrusted tool output only through tool result blocks with an explicit untrusted-data statement (and optional lightweight screening), which is independent from and fully compatible with enforcing a strict output schema via structured outputs, including case-insensitive handling of enum values whose exact casing isn't guaranteed. Placing search results in the system prompt grants them misplaced authority, injecting your own instructions into a tool result undermines the skepticism that channel is meant to invoke, and structured outputs work fine alongside tool use.

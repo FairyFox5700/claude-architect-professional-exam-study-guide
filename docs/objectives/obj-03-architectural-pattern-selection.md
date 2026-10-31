@@ -171,6 +171,28 @@ D. Prompt chaining across five fixed stages
 **Answer:** B
 **Explanation:** A single real-time lookup via a tool call within one turn is the archetypal augmented LLM use case, requiring no multi-step decomposition, critique loop, or dynamic delegation. The other patterns introduce structure and overhead that this straightforward single-call lookup does not need.
 
+### Q16.
+An architect is designing a compliance-review assistant where Claude must read a contract, extract clause-level risk flags, and then draft a summary memo that explicitly references earlier extracted flags and the reasoning behind each one established in the extraction step. A colleague proposes splitting extraction and drafting into two separate subagents to "keep each step focused." What is the BEST assessment of this proposal?
+
+A. The split is correct because every multi-step task benefits from being handled by separate agents
+B. The split is likely counterproductive here because the drafting step must carry forward the full reasoning context from extraction, and splitting into separate agents is what would lose that context; this work should stay within a single call or chain rather than being distributed across isolated agents
+C. The split is correct because subagents always reduce token consumption
+D. The split is irrelevant because Claude cannot perform extraction and drafting in the same session
+
+**Answer:** B
+**Explanation:** Work that must carry context from one step to the next is a reason to keep it together rather than split it, because distributing it into separately scoped subagents is precisely what strips away the shared context each step depends on; subagents are better suited to genuinely parallel or isolated workstreams. A and C are false generalizations about when splitting helps, and D misstates a technical limitation that does not exist.
+
+### Q17.
+A finance team's expense-approval workflow currently has Claude make a separate model call to check each of 200 employees' budget status against a shared ledger, one employee at a time, resulting in 200 slow, costly round trips for a single monthly report. What is the BEST architectural fix?
+
+A. Switch to an autonomous agent so it can decide how to check each employee more intelligently
+B. Have Claude generate and execute a single script that calls the budget-check tool across all 200 employees programmatically in one pass, replacing 200 separate model round trips with one
+C. Increase the model's context window so all 200 employees fit in one prompt
+D. Add a fifth parallel subagent dedicated to budget checks with no change to the per-employee calling pattern
+
+**Answer:** B
+**Explanation:** When the same tool is called repeatedly over a list, the structural fix is to move the loop into code the model writes and executes once, collapsing many round trips into a single script rather than making the agent "smarter" or adding more parallel agents. A and D do not address the repeated round-trip problem, and C conflates context size with the actual inefficiency of per-item tool invocation.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

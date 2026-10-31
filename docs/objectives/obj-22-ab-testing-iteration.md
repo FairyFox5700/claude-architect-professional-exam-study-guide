@@ -171,6 +171,39 @@ D. Use only historical data from a different company's deployment instead
 **Answer:** B
 **Explanation:** Concurrent exposure of both variants to the same conditions (including seasonal effects) neutralizes the confound, or alternatively the test can be scheduled outside the anomalous period; both preserve valid comparison. Ignoring seasonality, cancelling testing indefinitely, or substituting unrelated external data all fail to produce a valid controlled comparison.
 
+### Q16.
+Before launching an A/B test of a new retrieval strategy for a claims-assistant, an architect wants to know in advance how many sessions per variant are needed to reliably detect a 2-percentage-point accuracy improvement, and also wants to lock a guardrail metric (safety-flag rate) that must not regress. What practice does this reflect?
+
+A. Sample size and guardrail metrics should be decided only after the data starts coming in, based on how the numbers look
+B. Pre-registering a target sample size (based on the minimum effect size worth detecting) together with guardrail metrics before the experiment starts, so the analysis plan isn't influenced by the data itself
+C. There is no need to estimate sample size in advance; any sample size produces a valid result
+D. Guardrail metrics are unnecessary as long as the primary metric improves
+
+**Answer:** B
+**Explanation:** Calculating the required sample size for a meaningful effect size and fixing guardrail metrics before the experiment begins ensures the test is adequately powered and that unrelated regressions (like safety) are caught, rather than discovered only after the fact. Deciding these parameters reactively during the test, skipping sample-size planning, or ignoring guardrails all undermine the validity of the experiment's conclusions.
+
+### Q17.
+A SaaS company's architect is monitoring an ongoing A/B test and, after only 50 sessions per variant, notices the new prompt variant is ahead and decides to declare it the winner and stop the test immediately because the gap "looks convincing." What problem does this illustrate?
+
+A. This is sound practice since any lead, however small the sample, is meaningful
+B. Choosing to stop and declare a winner only after informally watching the data (rather than following a stopping rule set in advance) inflates the false-positive rate and can mistake random noise for a real effect
+C. The problem is that 50 sessions is always too many for any experiment
+D. There is no statistical issue here as long as the new variant eventually reaches 100% of traffic
+
+**Answer:** B
+**Explanation:** Deciding when to stop an experiment based on an in-flight, appealing-looking result (rather than a stopping rule and sample size fixed before the test began) is a form of optional stopping that substantially increases the chance of declaring a winner that is actually just noise. The issue isn't an inherently wrong sample-size threshold but the fact that the decision rule was chosen after peeking at the data.
+
+### Q18.
+A pharmaceutical company's architect wants to adopt a new prompting technique for a drug-interaction assistant. The technique already shows strong results in offline evaluation against the curated test set. What additional validation step is necessary before full production rollout?
+
+A. None; strong offline evaluation results are sufficient justification for full rollout
+B. A capped, monitored exposure to live traffic (e.g., a small controlled percentage) to surface real-world inputs and failure modes the offline suite never encountered, before expanding further
+C. Immediately route 100% of production traffic to the new technique to maximize the benefit as fast as possible
+D. Replace the offline evaluation suite with the online rollout entirely, since live data is always superior
+
+**Answer:** B
+**Explanation:** Offline evaluation on a fixed dataset cannot represent every real-world input the system will encounter, so a capped and actively monitored exposure in production provides genuinely new evidence about behavior on previously unseen traffic before expanding rollout; neither offline results alone nor an uncapped full rollout provide this additional safety net. Discarding the offline suite entirely would also remove a fast, repeatable pre-production check.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

@@ -171,6 +171,17 @@ D. Implement only the requests from the most senior person who asked
 **Answer:** B
 **Explanation:** Protecting a structured feedback and roadmap process — rather than reacting to informal requests ad hoc — keeps expectations manageable and commitments honest. Blanket acceptance (A) or seniority-based prioritization (D) undermines the planning process, and refusing engagement (C) harms the stakeholder relationship.
 
+### Q16.
+Midway through building a SaaS company's AI writing assistant, the client requests a significant new capability (multi-language support) not in the original scope. What two practices should the architect follow to manage this scope change properly?
+
+A. Quietly absorb the work to maintain goodwill, and leave the original project plan and timeline unchanged
+B. Expose the cost and schedule impact of the request as soon as it is raised, and if accepted, formally reset the agreed plan (dates, scope, commitments) in writing
+C. Accept the request immediately with no cost discussion, and silently extend the deadline without telling the client
+D. Refuse to discuss the request until the current sprint ends
+
+**Answer:** B
+**Explanation:** Sound scope-change management surfaces the cost the moment a request is made, rather than absorbing it silently, and formally resets the plan once a change is accepted so everyone works from the same true picture. Silently absorbing the change (A) or accepting it while leaving a now-false plan in place (C) both conceal the real impact from stakeholders, and refusing to engage (D) isn't a substitute for a defined intake process.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

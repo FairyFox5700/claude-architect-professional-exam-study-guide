@@ -171,6 +171,28 @@ D. Apply FedRAMP controls only to the frontend UI, leaving backend data processi
 **Answer:** B
 **Explanation:** Overlapping regulatory frameworks are common in government healthcare contexts, and the architecture must be designed to satisfy all applicable requirements concurrently (authorized environment, BAA, technical safeguards), not choose one over another. A, C, and D reflect fundamental misunderstandings of how multiple compliance frameworks can apply simultaneously.
 
+### Q16.
+An enterprise customer enables an organization-wide Zero Data Retention (ZDR) arrangement with its model provider and assumes this blanket setting guarantees that prompts and outputs are never stored at rest no matter which product feature is used, including batch processing, file uploads, and agent/code-execution features. A compliance review challenges this assumption. What is the correct understanding?
+
+A. ZDR is a single universal switch that automatically covers every feature and API the provider offers once enabled
+B. ZDR coverage must be verified feature-by-feature, since certain features (such as batch-processing APIs, file-upload/storage APIs, agent/skill features, code execution, and certain connector or managed-agent capabilities) are commonly excluded from a ZDR arrangement even when it is enabled at the organization level
+C. ZDR only applies to HIPAA-regulated customers and is irrelevant to other compliance regimes
+D. Enabling ZDR eliminates the need for any other compliance control, such as access logging or retention policies
+
+**Answer:** B
+**Explanation:** Zero Data Retention arrangements are typically scoped to specific products/APIs, and an architecture team must confirm which specific features are actually covered rather than assuming an organization-level toggle blankets every feature, since using an excluded feature silently steps outside the arrangement for that data. A, C, and D all overstate what a single ZDR setting guarantees.
+
+### Q17.
+A healthcare company enables HIPAA readiness (with a signed Business Associate Agreement) in its model provider's console for its patient-intake assistant. Several months later, a separate team wants to reuse the same provider account to run an unrelated autonomous coding/DevOps agent feature, and assumes the existing BAA automatically extends PHI protection to that new feature as well. What should the architecture team verify before approving this?
+
+A. Nothing — once HIPAA readiness is enabled for an account, every feature offered by that account is automatically covered
+B. Whether the specific new feature (e.g., an autonomous coding/agent capability) is actually included in the HIPAA-covered feature set, since HIPAA readiness is typically permanent for the account but does not necessarily extend to every feature, and PHI must never be placed in fields or contexts (such as raw schema definitions) that fall outside the protected, covered channels
+C. Whether the DevOps team has completed general security awareness training, which alone satisfies HIPAA requirements
+D. Whether the new feature is hosted in the same country as the original assistant, which is the only relevant HIPAA factor
+
+**Answer:** B
+**Explanation:** Enabling HIPAA readiness/BAA coverage for an account does not automatically extend to every feature that account can access — feature-level eligibility must be checked independently, and teams must avoid placing PHI anywhere outside the verified, covered processing path. A, C, and D all substitute an incomplete or irrelevant check for the actual feature-level verification required.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

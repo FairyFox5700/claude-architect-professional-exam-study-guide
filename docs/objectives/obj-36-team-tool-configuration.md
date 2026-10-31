@@ -171,6 +171,39 @@ D. Whether the engineer's monitor resolution differs
 **Answer:** A
 **Explanation:** If managed settings don't explicitly lock a permission, lower-precedence local or user settings can still broaden it, so auditing those layers is the correct first step to explain unexpected permission differences. Unrelated factors like programming language, reinstallation, or hardware have no bearing on the permission hierarchy.
 
+### Q16.
+A platform team sets an organisation-wide managed-settings deny rule blocking `Bash(curl:*)` to unapproved domains. A developer's personal user-level settings separately contain an "allow" rule for the same curl pattern because they find the prompts annoying. When the developer runs a matching curl command, what is the outcome?
+
+A. The allow rule wins because user settings are evaluated last and "last write wins"
+B. The deny rule always wins — permission evaluation resolves deny before ask before allow, and a lower-precedence allow rule cannot carve out an exception to a higher-precedence deny
+C. Claude Code will randomly choose between the two rules
+D. The command runs but logs a warning, since deny rules are advisory only
+
+**Answer:** B
+**Explanation:** Permission rules are evaluated in a fixed deny → ask → allow order, and this evaluation order combines with settings precedence so that a deny rule — especially one set at a higher-precedence layer like managed settings — cannot be overridden by an allow rule at a lower-precedence layer such as user settings. Deny rules are enforced, not advisory, and there is no "last write wins" or random behavior in permission resolution.
+
+### Q17.
+A regulated enterprise wants to let developers install Claude Code plugins (bundles of skills, commands, subagents, hooks, and MCP servers) only from its internally vetted plugin marketplace, while blocking installation from any public or unknown third-party marketplace. Which managed-settings capability should they configure?
+
+A. A CLAUDE.md note listing the approved marketplace
+B. Managed-settings marketplace controls such as `strictKnownMarketplaces` and `blockedMarketplaces` that restrict which plugin marketplaces are reachable at all
+C. Asking developers to self-certify that they only installed approved plugins
+D. Disabling the Skills feature entirely so no plugins can be installed
+
+**Answer:** B
+**Explanation:** Managed settings expose marketplace allow/deny controls (e.g., restricting to known marketplaces and blocking others) so an organisation can govern plugin distribution deterministically, which matters because plugins can bundle powerful capabilities like hooks and MCP servers. A CLAUDE.md note or self-certification is non-enforced guidance, and disabling Skills entirely sacrifices legitimate productivity capability instead of scoping the actual risk (untrusted marketplaces).
+
+### Q18.
+A financial services firm requires that if an engineer's laptop cannot reach the managed-settings distribution server at the start of a session (for example, VPN is down), Claude Code must refuse to start rather than silently fall back to a stale cached policy that might be missing a recently added restriction. Which setting enforces this "fail closed" behaviour?
+
+A. `forceRemoteSettingsRefresh`, which blocks session start if current organisational policy cannot be fetched
+B. A longer session timeout value
+C. A CLAUDE.md instruction asking Claude to check for connectivity first
+D. Setting the default permission mode to "ask" for all tools
+
+**Answer:** A
+**Explanation:** `forceRemoteSettingsRefresh` is designed specifically for this fail-closed guarantee — if the latest managed policy cannot be confirmed from the server, the session refuses to start rather than operating under potentially outdated cached rules. Session timeouts, CLAUDE.md notes, and permission-mode defaults don't address the specific risk of stale policy being silently applied when connectivity is lost.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

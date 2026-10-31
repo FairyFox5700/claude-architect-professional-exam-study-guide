@@ -171,6 +171,28 @@ D. Choose few-shot examples unconditionally, since examples are always superior 
 **Answer:** B
 **Explanation:** The right choice depends on the nature of the failure: ambiguous category boundaries are often best taught by demonstration, while clearly statable rules are best handled by direct instruction. Defaulting to one technique regardless of failure mode, or treating the choice as arbitrary, ignores the diagnostic step that should drive technique selection.
 
+### Q16.
+A team uses Claude's structured outputs feature (constrained decoding against a JSON schema) for a ticket-classification feature with an enum field defined as `["Open", "Closed", "Pending"]`. A teammate proposes also adding `"open"` (lowercase) as a distinct fourth enum value to capture a separate internal state. What should the architect flag as the key risk?
+
+A. Structured outputs cannot use enums at all, so the schema is invalid
+B. String enum and const values are not guaranteed to match the schema's exact capitalization even though the response validates successfully, so defining two enum values that differ only in capitalization (e.g., "Open" vs "open") creates values the application cannot reliably distinguish; enum comparisons should be done case-insensitively
+C. Adding a fourth enum value will cause every request to return a 400 error
+D. Enum values are case-sensitive and always returned in exactly the casing defined, so this change is completely safe
+
+**Answer:** B
+**Explanation:** Structured outputs constrain the shape of a response via constrained decoding, but documented behavior notes that string enum/const casing is not guaranteed, with no error signal when it mismatches—so near-duplicate enum values differing only in case are indistinguishable downstream, and comparisons should be case-insensitive. Enums are supported, this change would not cause a 400, and casing is not guaranteed to be exact.
+
+### Q17.
+An architect reads older documentation recommending that assistant-turn prefilling be used to skip Claude's conversational preamble and force a consistent output structure. The team is deploying on a current-generation model family where such prefilled requests return a 400 error on the last assistant turn. What is the BEST way to achieve the same consistent-structure goal on this model?
+
+A. Keep attempting the prefill technique repeatedly until it succeeds, since documentation recommends it
+B. Rely on explicit structured-output/schema instructions (and, where available, a structured-output/constrained-decoding feature) plus clear output-format instructions in the system prompt, since prefilling the final assistant turn is no longer supported on this model family and the API-enforced constraint takes precedence over the older technique
+C. Switch to a much older model solely to preserve the prefill technique, regardless of other requirements
+D. Abandon any attempt at consistent output structure, since no alternative exists
+
+**Answer:** B
+**Explanation:** When documented guidance conflicts with an enforced API constraint, the constraint wins; since prefilling the last assistant turn is rejected on this model family, the consistent-structure goal should be met with explicit schema/output-format instructions (and structured-output features where supported) instead. Repeating a rejected technique wastes effort, downgrading models solely to preserve a deprecated trick is not a sound architectural trade-off, and alternatives for achieving structure do exist.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

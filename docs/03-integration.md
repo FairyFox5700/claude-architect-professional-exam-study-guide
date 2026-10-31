@@ -256,3 +256,36 @@ D. Replace real-time paging with a daily summary email
 
 **Answer:** B
 **Explanation:** Dimensional breakdown of error-rate metrics turns a vague "something is wrong" signal into an actionable one, directly reducing diagnosis time during an incident by pointing engineers toward the likely failing component. Removing the alert or delaying detection to a daily email would harm incident response, and simply raising the threshold risks missing real problems rather than making the existing signal more useful.
+
+### Q23.
+A fintech's remote MCP server wrapping a payments API is found during review to (1) forward any bearer token a client sends straight to the downstream payments API without checking who it was issued for, and (2) request every available payments scope ("read, initiate, approve, reverse transactions") at first connection so users are never interrupted later. Which combination of fixes addresses both findings?
+
+A. Enable TLS on the connection, which resolves both the token-forwarding and scope-breadth concerns
+B. Have the server validate that each token was actually issued for it before use (eliminating token passthrough, which enables confused-deputy and audience-circumvention risks), and replace the broad up-front scope grant with a minimal initial scope plus targeted, logged incremental elevation as specific actions are actually needed
+C. Leave token handling as-is since downstream services will reject bad tokens anyway, but fix only the scope issue
+D. Fix only the token-forwarding issue, since broad scope requests are a UX optimization with no security downside
+
+**Answer:** B
+**Explanation:** Token passthrough is a named, forbidden anti-pattern precisely because it skips audience validation and can turn the server into a confused-deputy or exfiltration vector, while requesting every scope up front maximizes blast radius and makes future revocation disruptive — the correct fix addresses both independently: audience-validate every token at the server, and replace broad up-front consent with minimal initial scope, targeted elevation, and logged elevation events. TLS only protects data in transit and validates neither token audience nor scope appropriateness, assuming downstream rejection is a sufficient safety net ignores that the server itself is the first and most important enforcement point, and dismissing scope breadth as a pure UX matter ignores its direct bearing on blast radius and revocation risk.
+
+### Q24.
+A platform team's agent has grown to over 400 internal tools across microservices, and the team is deciding how to let Claude find the right 2-4 tools for a given task without loading all 400 definitions on every turn. One engineer proposes a custom "tool search" layer and asks what mechanisms are documented for this kind of on-demand discovery against a large catalogue. Which answer best reflects the available approaches and how this problem relates to retrieval strategy more broadly?
+
+A. There is only one correct mechanism — natural language queries — and anything else is unsupported
+B. On-demand discovery against a large tool catalogue can be implemented the same way retrieval against a large document corpus is: via pattern/regular-expression matching, via natural-language queries scored against a lexical method like BM25, or via a custom embedding-based semantic search — selecting the right few items from a large set at request time is the same underlying problem whether the set is documents or tools
+C. Tool discovery and document retrieval are unrelated problems that share no useful architectural parallel
+D. The only valid approach is to always load all 400 tool definitions, since partial loading is not supported by any mechanism
+
+**Answer:** B
+**Explanation:** Selecting a small relevant subset from a large catalogue at request time is structurally the same problem whether the catalogue holds documents or tools, and documented approaches for tool search mirror retrieval strategy choices: regex/pattern matching (lexical/keyword-style), natural-language queries against a BM25-style ranker (hybrid lexical-semantic), or a custom embeddings-based semantic search — giving the architect the same keyword-vs-semantic trade-off space covered elsewhere in this domain. Claiming only one mechanism is valid ignores the documented variety, treating tool discovery and document retrieval as unrelated misses the direct architectural parallel, and insisting all 400 definitions must always load defeats the stated goal and ignores that progressive, on-demand loading is a supported and recommended pattern at this scale.
+
+### Q25.
+A healthcare company's observability dashboard shows healthy error rates and normal latency, yet a clinician discovers that the RAG assistant quietly answered a drug-interaction question using a superseded guideline version that still carried valid-looking citations, and a separate conversation received a flat refusal that never triggered any alert. What is the common root cause linking both incidents, and what should the team do?
+
+A. Both are unrelated one-off bugs requiring no systemic change
+B. Both incidents are failure modes that present as healthy to conventional monitoring — a grounded-looking answer built on stale, citation-bearing content, and a refusal arriving on a successful response stream rather than an error — so the team should expand its failure taxonomy to explicitly define and instrument for these "looks-like-success" cases: metadata-based filtering/exclusion of superseded guideline versions at retrieval time, and alerting wired to refusal events specifically, not just API error events
+C. The fix for both is simply to lower the alert threshold on existing error-rate metrics
+D. The fix for both is to disable retrieval entirely and rely on the model's own judgment
+
+**Answer:** B
+**Explanation:** Both failures belong to a class that reads as a success to standard monitoring — stale-but-plausible retrieved content with intact citations, and a refusal delivered on a normal response stream rather than as an error — so the underlying fix is the same: explicitly name these failure modes in the system's failure taxonomy and instrument for them directly, via metadata-based exclusion of superseded content at the retrieval layer and dedicated alerting on refusal events rather than error events alone. Treating them as isolated bugs misses the shared "invisible to existing monitoring" pattern, lowering an error-rate threshold does nothing since neither incident ever produced an error event, and abandoning retrieval entirely removes a working capability instead of fixing the specific gap in version filtering and event-channel coverage.

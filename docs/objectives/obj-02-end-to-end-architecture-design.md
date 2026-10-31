@@ -171,6 +171,28 @@ D. Claude both drafts and auto-sends every email without compliance checks to ma
 **Answer:** B
 **Explanation:** This design cleanly separates each lifecycle stage, places deterministic compliance checks where they belong, targets human review at flagged cases, and closes the loop with logged outcomes for improvement — a complete, well-architected lifecycle. A collapses all stages into one ungoverned call, C underutilizes Claude, and D removes a necessary compliance safeguard for speed.
 
+### Q16.
+A pharmaceutical company's end-to-end design hands a sales team the ability to pass a "selected competitor product" identifier to Claude so it can retrieve previously generated comparison data from an earlier step in the same session. Weeks later, users report that identifiers from one session are occasionally reused for a different, unrelated product in a later session, causing Claude to retrieve and present comparison data for the wrong product with high confidence. What is the BEST fix?
+
+A. Reduce how often the comparison data is regenerated, since staleness is the root cause
+B. Never reuse or renumber identifiers once issued; expired or unknown identifiers must return an explicit error so Claude is told the reference is stale rather than silently returning plausible but wrong data
+C. Increase the model's context window so it can remember more identifiers
+D. Instruct users to double-check Claude's answers manually before relying on them
+
+**Answer:** B
+**Explanation:** Any handle passed to the model is a snapshot that can go stale, and because the system cannot detect staleness on its own, the executor must treat identifier reuse as strictly forbidden and return an explicit error for an invalid or stale reference — a silent reuse produces a confidently wrong result, while an explicit error is something the design can handle safely. A addresses a different problem (freshness of content, not identifier collision), C does not address identifier scoping at all, and D offloads a design-level error-handling gap onto end users.
+
+### Q17.
+A multinational bank's end-to-end design for new-hire onboarding of a Claude-based KYC document review system is nearing completion, and the original engineering team is rotating off the project. Which set of artifacts BEST demonstrates the handoff stage is actually complete?
+
+A. A full project history including meeting notes, a chronological timeline of decisions, and a slide deck summarizing the build
+B. The documented reasoning behind each design decision, the operating procedures for running the system day to day, and a runnable set of checks the incoming team can execute to verify whether a change broke anything
+C. A verbal walkthrough from the departing lead engineer with no written materials
+D. A list of every bug ever filed against the system during development
+
+**Answer:** B
+**Explanation:** Handoff is complete only when the receiving team can run the system, diagnose failures, and safely change it without access to the original builders, which requires design rationale, operating procedures, and executable verification checks — artifacts that are genuinely consumed by the next phase. A and D are historical records that hand nothing forward to day-to-day operation, and C leaves no durable artifact at all once the engineer departs.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

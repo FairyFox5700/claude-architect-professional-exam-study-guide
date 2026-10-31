@@ -171,6 +171,39 @@ D. Omission of performance implications to keep the document short
 **Answer:** B
 **Explanation:** Good technical design documentation for a mixed audience explains both the benefit and the cost of a configuration change in plain language, backed by data. Claiming no downsides (C) or omitting implications entirely (D) misleads readers responsible for approving the design.
 
+### Q16.
+An architect must brief both a hospital's executive sponsor and the engineering team that will build the approved design for a new Claude-based triage assistant, in a single document. How should the briefing be structured?
+
+A. Give both audiences identical depth and detail throughout the entire document
+B. Lead with the decision and its business consequence for the sponsor, then descend into the technical rationale and constraints the engineering team needs to implement faithfully
+C. Write only for the engineers, since the sponsor already approved the budget verbally
+D. Write only for the sponsor, and let engineers infer the rationale from the final design diagram
+
+**Answer:** B
+**Explanation:** A well-sequenced briefing descends from the decision and its business impact (what the sponsor must act on) into the technical rationale (what engineers need to build it faithfully), letting each reader stop at the depth they need. Flattening both into equal depth (A) forces each audience to wade through irrelevant material, and serving only one audience (C, D) leaves the other without what they need to approve or implement correctly.
+
+### Q17.
+A project team is under pressure to shorten a lengthy ADR for a retail client's inventory-forecasting system before it goes into the shared knowledge base. Which section should the team protect from being cut, even at the cost of trimming other content?
+
+A. The list of meeting attendees
+B. The rejected alternatives and the reasoning for why they were not chosen
+C. The formatting template used for the document
+D. The marketing description of the feature for the launch announcement
+
+**Answer:** B
+**Explanation:** Removing the rejected alternatives to save space is a known anti-pattern: without them, a future reader cannot tell whether a path was deliberately weighed and rejected or simply never considered, and the team ends up re-litigating settled ground. Attendee lists, templates, and marketing copy (A, C, D) are packaging, not substance, and can be trimmed without losing decision-making value.
+
+### Q18.
+An architect's evaluation results clearly contradict a model-selection decision that the client's VP has already announced publicly to the organization. What should the architect do?
+
+A. Proceed with implementation quietly while privately holding the contrary evidence
+B. Present the contradicting evidence directly to the VP, who owns the decision, and let the VP decide how to proceed with full information
+C. Override the VP's decision unilaterally and switch to the model the evaluation supports
+D. Withdraw from the engagement rather than raise the disagreement
+
+**Answer:** B
+**Explanation:** The architect's responsibility is to ensure the accountable decision-maker is fully informed, not to conceal the discrepancy (A), seize authority that isn't theirs (C), or avoid the conversation entirely (D). Surfacing the evidence while leaving the decision with its owner respects accountability while still protecting the organization from an uninformed choice.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

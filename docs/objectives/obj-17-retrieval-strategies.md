@@ -171,6 +171,17 @@ D. Use semantic search alone for Feature A and full-context retrieval for Featur
 **Answer:** B
 **Explanation:** The correct strategy depends on data structure and query pattern: a short document that must be summarized in its entirety is well served by full-context inclusion, while searching a large corpus for documents matching specific structured and conceptual criteria needs filtering and ranking rather than loading everything. Forcing consistency across fundamentally different tasks, applying only metadata filtering to a full-document summarization task, or reversing the two approaches would each produce either incomplete summaries or an infeasible, unscalable retrieval process.
 
+### Q16.
+An architect is reviewing two scenarios. Scenario 1: an agent repeatedly answers different questions about one 40-page contract within a single work session, with the contract text itself never changing between questions. Scenario 2: an agent answers questions against a 50,000-document standards library, where each question typically needs a different small slice of content. The team proposes building a vector index for both. For Scenario 1, a compliance officer also notes the contract "must not leave the customer's security boundary" by being copied into another system. What is the correct architectural judgment?
+
+A. Build a vector index for both scenarios, since indexing is always the superior approach regardless of how content is reused versus how it is searched
+B. Scenario 1 is a caching shape — the same material repeats while only the question changes, so it belongs in a cached prompt prefix rather than a separate index — and the boundary constraint reinforces this, since an index would create a durable second copy of the contract outside the customer's boundary, which a cache does not; Scenario 2 is a genuine retrieval shape, since each question needs a different slice of a large, non-repeating corpus
+C. Scenario 2 should use caching since the standards library is large, and Scenario 1 should use retrieval since the contract is long
+D. The boundary constraint is a cost consideration only and should be weighed against retrieval performance rather than treated as a hard constraint
+
+**Answer:** B
+**Explanation:** The discriminating test is what stays identical between consecutive requests: in Scenario 1 the material is constant and only the question changes, which is a caching shape (and caching, unlike an index, creates no durable copy of the content living in another system — making it the only viable option once the content cannot leave the customer's boundary), while Scenario 2 has a different relevant slice needed per question across a large corpus, which is a genuine retrieval shape. Indexing is not universally superior — it is actively unsuitable for Scenario 1 given the boundary requirement; reversing the two assignments misreads which scenario has repeating content versus which has a large, non-repeating corpus; and a data-residency/boundary constraint is a governance requirement that must be resolved before performance trade-offs are even considered, not weighed against them as one factor among others.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

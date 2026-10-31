@@ -171,6 +171,28 @@ D. Focus only on improving the visual formatting of submitted grant documents
 **Answer:** B
 **Explanation:** This statement directly targets the real bottleneck (research time), ties to the leadership-defined KPI (grants per quarter), and appropriately scopes Claude's role while keeping human judgment over submission — a faithful translation of the discovery findings. A removes necessary oversight, C ignores the nuance of varying funder requirements, and D addresses a non-issue.
 
+### Q16.
+During a feasibility assessment for a retailer's returns-automation proposal, an architect concludes the system cannot be built within the current data-access constraints, but notes that if the warehouse system exposed a real-time inventory API, the proposal would become buildable. How should this verdict be recorded?
+
+A. As a flat "no," since the system cannot be built today under any circumstances
+B. As a "yes, if" verdict that explicitly names the missing real-time inventory API as the condition, with an owner assigned to pursue making that API available
+C. As a "yes," since the architect is confident the API will eventually exist
+D. As an informal note in a meeting, since feasibility verdicts do not need to be written down
+
+**Answer:** B
+**Explanation:** A feasibility verdict has three legitimate outcomes — yes, yes-if, and no — and a "yes, if" is only useful when the specific condition that would change the answer is written down with an accountable owner, otherwise it quietly decays into an unconditional "yes." A incorrectly treats a conditional blocker as a permanent one, C skips past a real unmet constraint, and D fails to treat the verdict as the documented deliverable it must be.
+
+### Q17.
+An architect scoping a contract-analysis tool for a law firm wants to know, before writing any code, whether the firm's longest contracts (some exceeding 400 pages) will fit within a single model request alongside the firm's required system instructions and extraction tool definitions. What is the BEST way to establish this?
+
+A. Estimate token count by eye based on page count and proceed with the design
+B. Use the token-counting capability to measure the actual input size (including system prompt, tools and documents) against the target model's context window before committing to a single-call design, and treat the result as a structural constraint rather than a tuning problem if it does not fit
+C. Assume it will fit because Claude has a large context window in general
+D. Wait until the system is in production to discover whether any contracts are too large
+
+**Answer:** B
+**Explanation:** Sizing is arithmetic that can and should be done before any design is committed to: measuring actual token counts for real documents against the model's context window turns a guess into a verified constraint, and if a unit of work does not fit, that is a structural finding requiring retrieval or decomposition, not a prompt-tuning fix. A and C substitute assumption for measurement, and D defers a discoverable risk into costly production failure.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

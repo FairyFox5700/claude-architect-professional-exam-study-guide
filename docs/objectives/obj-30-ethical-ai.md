@@ -171,6 +171,17 @@ D. No review is necessary since the company does not explicitly collect race, ge
 **Answer:** B
 **Explanation:** A rigorous fairness review must consider proxy variables and actual disparate impact on protected or vulnerable groups, not just whether explicit protected-class fields were used as direct inputs — this mirrors established legal and ethical standards around disparate impact. A, C, and D all reflect the common but incorrect assumption that avoiding explicit protected fields is sufficient to avoid discriminatory outcomes.
 
+### Q16.
+A fintech company's Claude-based tool generates automated credit-line recommendations, which its compliance team identifies as falling within a "high-risk AI recommendation" category under the applicable usage policy. The team debates which recommendations require a qualified human professional's meaningful review with authority to change the outcome, plus disclosure to the applicant that AI was involved, versus which can be finalized without that extra step. What is the most accurate distinction?
+
+A. Every recommendation, including a full and unconditional approval that grants the applicant everything they requested, requires the same qualified-reviewer sign-off and disclosure
+B. Decisions that are "wholly favorable" to the individual (e.g., approving the full credit line requested, with no reduction) are commonly treated as exempt from the mandatory qualified-review requirement, while partial approvals or any denial still require a qualified professional's meaningful review and disclosure to the applicant
+C. Disclosure to the applicant is only required if the applicant specifically asks whether AI was used
+D. No human review is required for any high-risk recommendation as long as the model's confidence score is high
+
+**Answer:** B
+**Explanation:** High-risk AI recommendation policies typically exempt decisions that are fully favorable to the affected individual, since there is no adverse outcome to review, but require a qualified person with real authority to change the outcome to meaningfully review any partial approval or denial, along with disclosure that AI was used. A is overly broad, and C and D misstate the disclosure and review obligations for adverse or partial outcomes.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

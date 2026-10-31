@@ -171,6 +171,28 @@ D. Measuring success purely by how advanced or novel the underlying architecture
 **Answer:** B
 **Explanation:** Mature programs treat business-value alignment as an ongoing discipline, continuously measuring against agreed KPIs post-launch to inform investment, iteration or sunset decisions rather than a one-time exercise. A treats alignment as static, and C and D substitute subjective or technical vanity measures for genuine business-value tracking.
 
+### Q16.
+A payment processor's contract states that fraud-review decisions must be returned within 2 seconds for 99% of transactions, with financial penalties owed to merchants for every minute this commitment is missed. An architect is comparing three candidate architectures using a weighted scorecard across cost, accuracy and latency, and one architecture that scores highest on accuracy and cost only meets the 2-second target for 92% of transactions. What is the architect's BEST course of action?
+
+A. Include all three architectures in the weighted scorecard and select whichever has the highest total weighted score, since a strong accuracy and cost result can offset a latency shortfall
+B. Apply the 2-second/99% commitment as an elimination gate before any scoring: remove any architecture that cannot meet it, and only compare cost and accuracy among the architectures that remain
+C. Lower the stated SLA target to 92% so the high-accuracy architecture can be selected without further analysis
+D. Select the architecture with the best latency alone and ignore accuracy and cost entirely
+
+**Answer:** B
+**Explanation:** A stated performance commitment with a financial consequence attached is not one factor to average against others — it is a filter applied first, since a weighted average can let strong cost or accuracy results mask a latency shortfall that nonetheless breaches a paid commitment; only architectures that clear the gate should then be compared on remaining value dimensions. A is the named anti-pattern of treating a commitment as a soft, tradeable target, C unilaterally and inappropriately renegotiates a business commitment without stakeholder involvement, and D swings to the opposite extreme by ignoring other legitimate value dimensions entirely.
+
+### Q17.
+A law firm's Claude-based brief-drafting assistant reduces average drafting time per brief from 6 hours to 2 hours, a clear efficiency win. A year later, leadership notes that the firm's total billable output per attorney has not increased — attorneys are simply finishing briefs faster and have more idle time, with no corresponding increase in cases handled or hours billed. How should the architect characterize this outcome?
+
+A. The result is a architecture failure because no value was created at all
+B. The efficiency gain (time per brief dropped) is real, but the productivity gain was not realized because total output per attorney did not increase; this is a common and important distinction to surface so leadership can decide whether to act on the freed-up capacity
+C. This should be recorded as a second, larger efficiency gain since time was saved twice
+D. The firm should conclude that productivity cannot be measured for legal knowledge work
+
+**Answer:** B
+**Explanation:** Efficiency (less time or cost per unit of work) and productivity (more output per person in the same time) are distinct pillars, and a very common way a successful pilot produces no visible business result is exactly this pattern: hours saved per item without any corresponding increase in realized output; naming it as unrealized productivity, rather than a failure or a double efficiency win, is what allows leadership to decide whether to redirect the freed capacity toward more billable work. A dismisses a real, measured efficiency gain, C mischaracterizes an efficiency result as a second independent gain, and D avoids a measurable distinction that is very much answerable here.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

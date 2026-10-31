@@ -171,6 +171,28 @@ D. Discard both and rely solely on production user complaints
 **Answer:** B
 **Explanation:** For high-stakes domains like drug interactions, expert-verified correctness is irreplaceable for core quality gating, while a large synthetic set still adds value for breadth and regression coverage — a complementary combination outperforms either alone. Raw sample size without quality control, or waiting for user complaints, is insufficient for safety-critical evaluation.
 
+### Q16.
+An architect calibrating a model-based grader for a customer-service assistant writes a rubric that simply says "score 1-10 for helpfulness" with no further guidance, and finds two human reviewers scoring the same transcript a 6 and a 9. What is the most effective fix to the rubric itself?
+
+A. Remove the rubric entirely and let the grader decide freely
+B. Add concrete, example-anchored descriptions of what output looks like at each score point (or key points), so graders and humans share a common standard
+C. Switch exclusively to code-based grading since human disagreement proves rubrics don't work
+D. Lower the scoring scale to a binary pass/fail to avoid any further disagreement
+
+**Answer:** B
+**Explanation:** Score anchors — concrete descriptions or examples of what distinguishes adjacent points on the scale — give both human reviewers and model-based graders a shared, reproducible standard, directly addressing the ambiguity that caused the 6-vs-9 disagreement. Removing guidance, abandoning rubrics for pure keyword matching, or collapsing to binary scoring would lose the nuance the use case requires rather than fix the underlying ambiguity.
+
+### Q17.
+A retail company builds an evaluation set for its product-support agent by deliberately rebalancing categories so that rare-but-important query types (e.g., warranty disputes) each make up an equal 10% share, even though they represent under 1% of real production traffic. The resulting aggregate score looks strong. What caution should the architect apply when reporting this score?
+
+A. None; a rebalanced set is always preferable to one that mirrors production
+B. The aggregate score should be reported alongside the dataset's category distribution, since a rebalanced set describes a different (non-production) population and the overall number can mislead stakeholders about real-world performance
+C. Rebalancing eliminates the need for any further regression or adversarial testing
+D. The rebalanced score should replace production monitoring entirely going forward
+
+**Answer:** B
+**Explanation:** Deliberately rebalancing a dataset is a legitimate way to ensure rare categories get adequate coverage, but the resulting aggregate score reflects a synthetic population mix, not actual traffic — so the category distribution must be documented and considered when interpreting or communicating the overall number. Treating the rebalanced score as a direct proxy for production performance, or as a substitute for regression/adversarial testing or live monitoring, misrepresents what the number actually measures.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

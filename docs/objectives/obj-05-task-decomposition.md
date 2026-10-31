@@ -171,6 +171,17 @@ D. Splitting them makes the pipeline slower with no benefit
 **Answer:** B
 **Explanation:** These represent two distinct business rule sets (eligibility policy versus refund calculation) that commonly change independently; splitting them into separately testable units with clear output contracts reduces the blast radius of future changes and improves testability. A, C and D all undervalue the maintainability and correctness benefits of proper separation.
 
+### Q16.
+Six months after launch, a manufacturing company's defect-reporting pipeline (transcribe → classify severity → look up warranty → generate report) is handling twice the original volume, and the classification subtask's accuracy has dipped slightly on an edge-case defect type. Separately, a new regulatory requirement now mandates that every report include a traceable chain-of-custody record naming every system and person who touched the defect data, a concept the current decomposition has no component or contract to express. Which situation requires redesigning the decomposition, and which is iteration?
+
+A. Both situations require a full redesign, since any change to a live pipeline is a redesign
+B. The volume increase and accuracy dip are both absorbable as iteration within the current components; the chain-of-custody requirement forces redesign, because no existing subtask or contract has a place to carry that information
+C. Both situations are iteration, since the pipeline's four subtasks remain conceptually the same
+D. The chain-of-custody requirement is iteration, since it can simply be appended as a note in the final report's text
+
+**Answer:** B
+**Explanation:** A signal forces redesign only when it names a requirement the current decomposition genuinely cannot express; volume growth and an accuracy dip on an edge case are both absorbable inside the existing subtask boundaries and are therefore iteration, while a chain-of-custody requirement introduces a new concept with no owning component or contract, which requires adding or restructuring parts of the decomposition. A overclassifies routine changes as redesign, C misses the genuine new requirement, and D treats a structural, auditable requirement as a cosmetic text addition rather than something that needs its own contract.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

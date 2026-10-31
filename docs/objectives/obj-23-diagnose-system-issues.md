@@ -171,6 +171,17 @@ D. This is purely a latency issue requiring infrastructure scaling
 **Answer:** B
 **Explanation:** A high aggregate pass rate alongside a newly discovered high-failure category reveals an evaluation coverage gap rather than a wholesale model failure; the correct response is to incorporate the new adversarial category into the dataset and use it to guide targeted fixes. Declaring the model broken, ignoring the finding, or misdiagnosing it as an infrastructure issue all miss the actual root cause.
 
+### Q16.
+A bank's loan-advisory agent begins behaving noticeably differently overnight even though the architecture team confirms the pinned model identifier in their API calls has not changed and no prompt or code deployment occurred. What should the architect investigate as the most likely explanation?
+
+A. The pinned model ID must have silently changed its underlying weights on its own
+B. A change in surrounding serving infrastructure (e.g., request routing, safety classifiers, or sampling/decoding logic) rather than the model itself, since the model ID is pinned and did not change
+C. This can only be a user-reported illusion with no real underlying cause
+D. The evaluation dataset must be corrupted
+
+**Answer:** B
+**Explanation:** A pinned model identifier should represent a fixed snapshot, so unexpected behavior change without any application-level deployment points to something in the surrounding serving stack (routing layer, safety filters, decoding parameters) rather than a silent swap of the model weights themselves. Assuming the pinned model silently changed, dismissing the report as illusory, or jumping to blame the evaluation dataset all skip the more likely infrastructure-level explanation.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

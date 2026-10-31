@@ -171,6 +171,39 @@ D. Because only one model can be used per organization at a time
 **Answer:** B
 **Explanation:** The core trade-off principle is proportionality: match model strength to task demands to avoid wasted cost and latency. The most capable model can handle simple tasks fine (just inefficiently), there is no such legal prohibition, and organizations are not limited to a single model.
 
+### Q16.
+A fintech company's agent uses Claude's effort parameter to control reasoning depth across different request types. An architect needs to explain the available effort levels and what happens if the parameter is left unset. Which statement is accurate?
+
+A. Effort only has two levels, "on" and "off," and leaving it unset defaults to "off"
+B. Effort ranges across levels such as low, medium, high, xhigh, and max; leaving the parameter unset is equivalent to using the default "high" level
+C. Effort controls only the final answer's word count and has no relationship to reasoning depth
+D. Effort must always be set explicitly on every request, since there is no documented default
+
+**Answer:** B
+**Explanation:** Claude's effort parameter spans multiple levels (low through max) trading response thoroughness against token efficiency, with "high" documented as the default, equivalent to omitting the parameter entirely. It is not a binary on/off switch, it governs reasoning depth rather than word count alone, and a documented default does exist.
+
+### Q17.
+An architect is designing cost controls for a multi-step agentic coding assistant that makes many sequential tool-use round trips per task. The team wants to cap total spend for the entire task, not just a single request, and also wants to understand how "thinking" tokens are billed. Which statement is correct?
+
+A. Thinking tokens are free and unrelated to max_tokens, and setting max_tokens once at the start of the task automatically caps the whole multi-step loop
+B. Thinking tokens are billed as output tokens (even when the thinking text itself is not returned) and count toward max_tokens; since max_tokens applies per request, capping spend for an entire multi-step loop requires a task-level budget mechanism rather than a single max_tokens value
+C. Thinking tokens are billed separately as a flat per-task fee regardless of how much reasoning occurs
+D. max_tokens automatically aggregates across every tool-use round trip in a task without any extra configuration
+
+**Answer:** B
+**Explanation:** Reasoning tokens are billed as output tokens and count against max_tokens, but max_tokens is scoped to a single request, so a ten-round-trip agentic loop has ten separate ceilings unless a task-level budget mechanism is used to bound the whole loop. Thinking is not free or a flat per-task fee, and max_tokens does not auto-aggregate across requests.
+
+### Q18.
+A team upgrades its customer-support agent from an older Claude model to a newer one. The system prompt contains forceful phrasing such as "CRITICAL: You MUST use the escalate_to_human tool whenever the customer expresses any frustration." After the upgrade, the tool fires far more often than intended, even for mild customer annoyance. What is the MOST likely explanation and fix?
+
+A. The new model ignores system prompts, so the phrasing is irrelevant; add the same instruction to every user message instead
+B. Newer model generations can respond more strongly to system prompt instructions than older ones; forceful, all-caps imperative phrasing calibrated to fix an older model's under-triggering can cause over-triggering after an upgrade, so the instruction should be dialed back to ordinary language and re-validated
+C. The tool definition itself must be deleted and rewritten from scratch after every model upgrade
+D. Over-triggering after a model upgrade is unrelated to prompt phrasing and can only be fixed by lowering the model's temperature
+
+**Answer:** B
+**Explanation:** Documented behavior shows some newer Claude generations respond more strongly to system prompt instructions, so prompt calibration—including forceful phrasing meant to fix under-triggering—does not transfer cleanly across model generations and can flip into over-triggering; dialing back to ordinary phrasing and re-validating is the correct remediation. System prompts are still respected, tool definitions don't need a full rewrite, and temperature is not the documented lever here.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

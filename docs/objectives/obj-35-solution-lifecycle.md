@@ -171,6 +171,28 @@ D. No formal plan, relying on staff to adapt informally
 **Answer:** B
 **Explanation:** In safety-critical environments, a parallel-run/shadow period with validation before full cutover is the standard risk-mitigation practice when retiring a legacy system in favor of a new one. Immediate cutover (A), premature decommissioning (C), or having no plan (D) all introduce unacceptable patient-safety risk.
 
+### Q16.
+A retail company's AI product-description assistant begins producing noticeably worse output immediately after Anthropic releases a new default model version the team adopted. The eval score drops by six points in one specific content category. What should the architect do first?
+
+A. Immediately redesign the entire multi-step architecture, assuming the pattern itself is now wrong
+B. Treat this as a local failure tied to the model change: re-tune the affected prompts and retrieval settings against the eval suite on the new model before considering any larger redesign
+C. Revert to the deprecated model permanently and refuse to migrate again
+D. Ignore the drop since eval scores naturally fluctuate between model versions
+
+**Answer:** B
+**Explanation:** A failure that appears right after a model change and is localized to one category is best treated as a local, iterable problem — tune the prompt/retrieval against the eval suite — rather than assumed to be a structural flaw requiring re-architecture (A). Permanently reverting (C) avoids the inevitable migration, and dismissing a measured six-point drop (D) ignores a real regression that the eval suite was built to catch.
+
+### Q17.
+A manufacturing client wants to move its AI-assisted inspection pilot, which has performed well with one plant, into company-wide production. What should the architect ensure is agreed upon BEFORE scaling the pilot?
+
+A. Nothing further is needed — a successful pilot should scale immediately to maximize value
+B. Defined graduation criteria agreed up front — performance thresholds, operational readiness (monitoring, runbooks, support model), and risk/compliance infrastructure — so the decision to scale is evidence-based rather than ad hoc
+C. A commitment to scale regardless of outcome, to maintain stakeholder enthusiasm
+D. A plan to select the next use case based on whichever team asks the loudest
+
+**Answer:** B
+**Explanation:** Moving from pilot to production should be gated by pre-agreed graduation criteria covering performance, operational readiness, and risk infrastructure, preventing a successful but narrow pilot from being scaled before the organization is actually ready to support it. Scaling automatically on pilot success alone (A, C) or choosing the next use case by loudest demand (D) skips the structured evaluation this transition requires.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

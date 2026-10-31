@@ -171,6 +171,28 @@ D. CLAUDE.md only works for the first five minutes of a session
 **Answer:** A
 **Explanation:** When a correctly placed CLAUDE.md seems ignored, likely causes include a conflicting nested CLAUDE.md or managed-level override, a hook altering behavior, or context truncation in a long session pushing the instruction out — all are legitimate things to check. CLAUDE.md is a functional, not decorative, mechanism, and it has no OS dependency or arbitrary time limit.
 
+### Q16.
+A security team is reviewing the risk of running Claude Code non-interactively against an untrusted, externally-contributed repository (e.g., a third-party pull request checked out in CI). They are concerned that hooks, skills, custom commands, subagents, plugins, MCP servers, and memory files defined inside that untrusted repo could auto-load and execute with no prompt, creating a code-execution risk before anyone reviews the content. What operational mode mitigates this?
+
+A. Bare mode, which skips auto-discovery of hooks, skills, commands, subagents, plugins, MCP servers, and memory files for the run, so untrusted repository content can't silently execute
+B. Increasing the context window size for the session
+C. Adding another nested CLAUDE.md file inside the untrusted repo
+D. Switching the permission mode to "auto" so actions run with background checks
+
+**Answer:** A
+**Explanation:** Bare mode is designed exactly for this scenario — it disables automatic discovery and loading of repo-defined hooks, skills, commands, subagents, plugins, and MCP servers, which closes the gap where an untrusted repository's own configuration could otherwise execute without any prompt. Context window size is unrelated, adding another CLAUDE.md inside the untrusted repo only adds more untrusted content, and "auto" permission mode increases autonomous execution rather than restricting it.
+
+### Q17.
+A platform team traces a cost spike to engineers routinely running single Claude Code sessions for many hours without ever resetting context, causing each turn to resend a very large accumulated context. They want both a coaching fix for developers and a data-driven way to confirm which sessions/repositories are driving the spend. What combination addresses this specific pattern (distinct from simply "investigate usage data")?
+
+A. Coach developers to use `/clear` (reset context) and `/compact` (summarize/shrink context) during long sessions, combined with OpenTelemetry usage export or the Analytics API to quantify which sessions and repositories are accumulating the largest context/spend
+B. Permanently cap every session to five minutes regardless of task complexity
+C. Remove Claude Code access from the engineers with the highest usage, with no further diagnosis
+D. Tell engineers to open a brand-new session for literally every single message
+
+**Answer:** A
+**Explanation:** `/clear` and `/compact` are the specific, supported mechanisms for managing context bloat in long-running sessions, and pairing that coaching with OpenTelemetry/Analytics API usage data lets the platform team confirm the actual drivers of spend rather than guessing. An arbitrary hard time cap or a blanket new-session-per-message rule ignores legitimate task needs, and removing access without diagnosis doesn't identify or fix the root cause.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

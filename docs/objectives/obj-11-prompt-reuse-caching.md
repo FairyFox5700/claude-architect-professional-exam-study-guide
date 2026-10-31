@@ -171,6 +171,39 @@ D. Caching only works with few-shot examples and has no relationship to system p
 **Answer:** B
 **Explanation:** Skills address what context gets loaded and when (reducing unnecessary context on low-relevance requests), while caching addresses the cost/latency of reusing whatever stable content is present—these operate at different layers and work well together. They are not mutually exclusive, neither replaces the system prompt, and caching applies broadly to stable prompt content, not only few-shot examples.
 
+### Q16.
+An architect wants to maximize prompt-cache hit rates for a support agent whose request is built from tool definitions, a system prompt, and conversation messages. A teammate proposes adding one new optional tool definition mid-week to support a new feature. What should the architect expect regarding caching?
+
+A. Caching is unaffected by tool definition changes since tools are cached completely independently of the system prompt and messages
+B. Cache prefixes are built in a fixed order—tools, then system prompt, then messages—so a change at any level invalidates that level and everything after it; because tools come first, modifying the tool definitions invalidates the entire cache, including the system prompt and message history portions
+C. Only the newly added tool's own definition is affected; all previously cached content remains valid
+D. Adding a tool definition has no effect on caching because caching only applies to user messages
+
+**Answer:** B
+**Explanation:** Prompt caching is built as an ordered prefix of tools, then system prompt, then messages, so a change at the tools level invalidates not just that segment but everything that follows it in the order, meaning a single new tool definition can invalidate the whole cache. Caching is not independent per layer, the blast radius is not limited to just the new tool, and caching is not restricted to user messages only.
+
+### Q17.
+An architect is deciding on a prompt-caching configuration for a large, stable 15,000-token system prompt used by an agent whose requests to the same conversation are typically more than 20 minutes apart, but less than an hour apart. Which configuration detail is MOST relevant to this decision?
+
+A. Cache breakpoints always cost extra regardless of how many are used, so minimizing breakpoints is the only lever available
+B. The default cache lifetime is 5 minutes, refreshed at no extra cost each time it's used, while a 1-hour lifetime is available at twice the base input token price to write; since this workload's gap between reuses (20-60 minutes) exceeds the 5-minute default, the 1-hour option is worth evaluating against its extra write cost for this large, stable prefix
+C. Prompt caching has no concept of lifetime; once written, a cache entry persists indefinitely until manually cleared
+D. Caching reduces the cost of generating output tokens, so the main benefit here is faster report generation
+
+**Answer:** B
+**Explanation:** Documented cache behavior gives a 5-minute default lifetime (refreshed free on reuse) and an optional 1-hour lifetime at double the base input price to write; a request gap of 20-60 minutes would miss the 5-minute window entirely, making the 1-hour option worth weighing against its added write cost for a large, reused prefix. Breakpoints themselves add no extra cost, cache entries are not indefinite, and caching has no effect on output token cost.
+
+### Q18.
+A platform team publishes a new version of a widely used "contract-analysis" Claude Skill to add a bug fix, and several production agents reference that Skill. One engineer uploads only the changed files for the new version, assuming unchanged files carry over automatically from the previous version. What is the MOST important problem with this approach, and what should production deployments do instead?
+
+A. There is no problem; Skills automatically merge new uploads with the previous version's files
+B. A new Skill version is a complete snapshot, not a delta—any files left out are not carried over from the previous version, which is a data-loss risk; production deployments should also pin a specific Skill version rather than using "latest," since an unpinned version can change what deployed agents run the moment anyone publishes a new version
+C. Skills cannot be versioned at all, so this scenario is not possible
+D. Only the Skill's description needs version control; the underlying files are never versioned
+
+**Answer:** B
+**Explanation:** A new Skill version must be uploaded as the full, complete file set because it replaces the entire snapshot rather than patching it—omitting files causes them to be dropped, not carried over—and production should pin an explicit version so that someone else publishing a new version does not silently change already-deployed agent behavior. Skills do not auto-merge across versions, they are versioned as a whole artifact, and the files themselves (not just the description) are versioned.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

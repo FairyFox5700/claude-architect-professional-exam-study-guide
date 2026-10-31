@@ -171,6 +171,28 @@ D. Relying entirely on the model provider to handle all monitoring responsibilit
 **Answer:** B
 **Explanation:** Mature production monitoring combines multiple complementary capabilities — logging, tracing, ongoing evaluation, regression detection, and alerting — tied into a regular improvement process, giving both depth and actionability. Logging without alerting/tracing, manual ad hoc tracking, or outsourcing monitoring entirely to the provider all leave significant gaps in visibility and responsiveness.
 
+### Q16.
+A telecom provider's operations dashboard shows normal request rate, normal error rate, stable p95/p99 latency, and 99.98% uptime throughout a period during which customer complaints about wrong answers from its billing assistant have surged. Why do the standard operational dashboards fail to show any problem?
+
+A. The dashboards are misconfigured and should be replaced entirely
+B. Operational counters (throughput, error rate, latency, uptime) measure whether the system is running, not whether its answers are correct; detecting a quality regression requires content-level signals such as sampled response review, grader scores, or complaint correlation
+C. Uptime and error rate are the most reliable proxies for answer correctness and should be trusted here
+D. This pattern only happens when the monitoring system itself has crashed
+
+**Answer:** B
+**Explanation:** Standard operational/observability metrics describe the health of the serving pipeline (is it up, is it fast, is it erroring) and are structurally incapable of detecting that the content of successful, fast, non-erroring responses is wrong; catching a quality regression requires monitoring that actually inspects output content, such as sampled model-/human-graded review or correlation with complaint volume. The dashboards are not inherently misconfigured or crashed — they are simply answering a different question than "are the answers correct."
+
+### Q17.
+A government agency reruns the exact same fixed 500-example evaluation set against its citizen-services chatbot every week, and the score has stayed flat at 93% for six months. Meanwhile, real user satisfaction has been quietly declining as the agency rolled out new services and citizen query patterns shifted. What does this scenario reveal about the evaluation set itself?
+
+A. A flat score over time always means the system is healthy and no further action is needed
+B. A frozen, never-refreshed evaluation set can no longer detect regressions caused by a shift in the real input distribution, since it keeps measuring performance only on the same unchanging slice of traffic; the set should be periodically refreshed and its distribution compared against current production traffic
+C. The evaluation set should be deleted since it is clearly broken
+D. This proves the model-based grader is miscalibrated and must be replaced with a code-based grader
+
+**Answer:** B
+**Explanation:** A fixed evaluation set that is never refreshed will keep producing the same score indefinitely because it only ever tests the same unchanging slice of inputs, even as the live traffic distribution shifts due to new features or changing user behavior — the flat score reflects the dataset's staleness, not system health. The fix is to periodically refresh the set and compare its category distribution to current production traffic, not to delete the dataset outright or assume the grader (rather than the dataset's staleness) is the problem.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

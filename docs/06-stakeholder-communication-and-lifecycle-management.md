@@ -187,3 +187,36 @@ D. Claim the system is fully deterministic and that leadership is mistaken
 
 **Answer:** B
 **Explanation:** Managing expectations around probabilistic outputs requires an honest, plain-language explanation tied to concrete mitigations and the agreed SLA threshold, while connecting the concern to the ongoing feedback/continuous-improvement loop. Mischaracterizing normal behavior as a defect (A), avoiding the explanation (C), or falsely claiming determinism (D) all undermine stakeholder trust.
+
+### Q17.
+During discovery for the retail chain's ticket-automation project, a stakeholder says the assistant "just needs to handle the standard tickets." What should the architect do with the word "just" and the phrase "standard tickets"?
+
+A. Accept the statement as a complete requirement and move on, since the stakeholder clearly understands their own process
+B. Treat "just" and "standard tickets" as a sign of compressed, unexamined complexity, and ask what happens to the tickets that fall outside that boundary, how many there are, and who handles them today
+C. Reword the statement in the requirements document using more formal engineering language, without probing further
+D. Ask the engineering team to define "standard" based on what would be easiest to automate
+
+**Answer:** B
+**Explanation:** Words like "just," "only," and undefined categories like "standard tickets" routinely hide complexity the speaker has not examined; the correct move is to ask what happens in the excluded case and how often it occurs, not to accept the summary at face value (A), merely restate it formally (C), or let engineering convenience define the boundary (D).
+
+### Q18.
+While finalizing the ADR for the hybrid ticket-automation design, a senior engineer suggests trimming the "rejected alternatives" section to shorten the document, since the team already knows why full automation was rejected. Separately, new eval data arrives showing the chosen escalation threshold underperforms what the VP announced to the board. How should the architect handle both situations?
+
+A. Cut the rejected alternatives to save space, and quietly adjust the threshold without telling the VP, since the architect is confident it's the right call
+B. Keep the rejected alternatives in the ADR so future readers can distinguish a considered-and-declined path from one that was never evaluated, and present the new eval data to the VP so they can decide how to proceed with full information
+C. Cut the rejected alternatives since the current team "already knows," and override the VP's announced threshold unilaterally based on the data
+D. Keep the rejected alternatives only if legal requires it, and avoid raising the eval discrepancy with the VP to prevent embarrassment
+
+**Answer:** B
+**Explanation:** Rejected alternatives must stay in an ADR so a future reader can tell a deliberately declined option from one nobody considered, and new evidence that contradicts an already-announced decision must be surfaced to the accountable owner rather than concealed or acted on unilaterally. Trimming the ADR for convenience (A, C, D) and either hiding or overriding the VP's decision (A, C, D) both undermine the record's and the stakeholder relationship's long-term value.
+
+### Q19.
+A hospital's on-call clinical IT staff keep contacting the departed architect directly whenever the AI documentation assistant misbehaves overnight, because the handover package only included a slide deck and a promise that "the architect is reachable if needed." What should have been delivered instead, and why?
+
+A. Nothing different — a reachable architect is a reasonable long-term support model for a critical clinical system
+B. A runbook mapping common failure symptoms to first actions and owners, plus the eval suite and thresholds the on-call team can run themselves, so diagnosis and routine fixes don't depend on the original architect's availability
+C. A longer slide deck covering more background on the original design intent
+D. A rule requiring all overnight issues to wait until the architect is available the next business day
+
+**Answer:** B
+**Explanation:** A handover is only complete when the receiving team can diagnose and resolve issues without the original architect, which requires written runbooks and a runnable eval suite rather than a dependency on a specific person's availability (A) or a thicker slide deck that still lacks operational procedure (C). Forcing clinical issues to wait for business hours (D) is unacceptable in a safety-sensitive environment and doesn't fix the underlying documentation gap.

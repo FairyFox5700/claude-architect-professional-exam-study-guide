@@ -171,6 +171,28 @@ D. The vendor's sales representative
 **Answer:** B
 **Explanation:** Front-line staff who absorb escalations are directly affected by system design (handoff quality, context transfer) and are frequently omitted from discovery despite being essential to workflow success. The other groups are involved but are not the ones whose daily workflow is most reshaped by the system.
 
+### Q16.
+During discovery for a mid-size insurer's claims-intake assistant, every stakeholder describes a clean, linear approval process. The architect wants to surface the "embarrassing constraints" that nobody volunteers in a happy-path interview. Which question is MOST likely to expose them?
+
+A. "Can you walk me through how the process is supposed to work?"
+B. "What happens when the normal process doesn't work, how often does that happen, and who fixes it today?"
+C. "Which software do your adjusters currently use?"
+D. "What is your target go-live date?"
+
+**Answer:** B
+**Explanation:** Asking about exceptions and workarounds surfaces the undocumented, often "embarrassing" constraints (disputed ownership, data quality workarounds, informal fixes) that a happy-path question like A will never reveal. Tooling (C) and timeline (D) don't probe for hidden process reality.
+
+### Q17.
+An architect wraps up a discovery series for a utility company's outage-prediction assistant. Several workshops were held and stakeholders seem aligned. Before declaring discovery complete, what MUST still be explicitly confirmed in writing?
+
+A. That every stakeholder enjoyed the workshops
+B. A measured baseline, a dated numeric target, the binding constraints, and a named owner accountable for the outcome
+C. A finalized UI mockup approved by the design team
+D. The specific Claude model version that will be used
+
+**Answer:** B
+**Explanation:** Discovery is finished only when these four things are settled and agreed by people who can commit to them — a baseline to measure against, a dated target, the constraints that bind the design, and an accountable owner. A mockup (C) or model choice (D) are build-time artifacts, and stakeholder satisfaction with meetings (A) says nothing about whether the requirements are actually settled.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

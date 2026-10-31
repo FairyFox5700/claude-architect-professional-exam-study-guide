@@ -171,6 +171,28 @@ D. The number of Slack messages mentioning "Claude"
 **Answer:** B
 **Explanation:** Combining adoption breadth, measurable time savings on specific repeatable tasks, and downstream delivery/quality metrics provides a defensible, multi-dimensional ROI picture for leadership. Anecdotes, raw spend without outcomes, or informal mention counts are weak, non-rigorous indicators.
 
+### Q16.
+A platform team repeatedly needs a specialized "database migration reviewer" capability: a narrower toolset, a dedicated system prompt focused on migration safety, and its own isolated context so it doesn't clutter or get confused by the main conversation's history. Which Claude Code feature best fits this need?
+
+A. A subagent defined in `.claude/agents/` with its own scoped tools, prompt, and context, invoked for this specific delegated task
+B. Appending the migration-review instructions to the project's main CLAUDE.md so they always load
+C. A managed-settings permission rule granting broader database access
+D. A single long-lived chat session kept open indefinitely for all migration work
+
+**Answer:** A
+**Explanation:** Subagents are purpose-built for delegated, specialized work that needs its own tools, prompt, and isolated context — invoking one keeps the main session's context clean and focused while still providing the specialized capability on demand. Adding it to the main CLAUDE.md would load it into every session regardless of relevance, a permission rule only governs access rather than behavior, and a single persistent session doesn't provide isolation or reuse across tasks.
+
+### Q17.
+A team wants Claude Code to automatically review every pull request in CI and post structured comments as a bot, but is concerned that if the same session that authored the code also performs its own review, it will share the same blind spots and miss its own mistakes. How should they configure this safely while still automating the review?
+
+A. Run Claude Code in headless mode in the CI pipeline (e.g., `claude -p` with JSON output and a scoped tool allowlist) as a separate, independent review step distinct from the authoring session, with humans still approving the final merge
+B. Let the same session that wrote the code also approve and merge its own pull request to save time
+C. Avoid CI integration entirely and have developers manually copy diffs into a fresh chat each time
+D. Run an interactive Claude Code session on a shared server that the whole team takes turns using for reviews
+
+**Answer:** A
+**Explanation:** Headless, non-interactive execution with structured JSON output and a scoped tool allowlist is the supported pattern for automated CI review, and running it as an independent step — separate from whatever session authored the change — avoids the blind-spot problem of a session reviewing its own work, while a human approval gate preserves oversight. Letting the authoring session review itself defeats the purpose of independent review, and manual copy-paste or shared interactive sessions are not automated, consistent patterns.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

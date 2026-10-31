@@ -171,6 +171,39 @@ D. Ask operators to stop using the agent during shift changes instead of investi
 **Answer:** B
 **Explanation:** Overall aggregate metrics can hide time-bound or contextual patterns (like shift-change load spikes); segmenting metrics by relevant dimensions such as time-of-day is necessary to surface problems that only manifest under specific operational conditions. Concluding "healthy" from aggregates alone misses the reported issue, swapping one percentile for another doesn't address the need for time-based segmentation, and telling operators to avoid the system sidesteps the actual engineering investigation needed.
 
+### Q16.
+A SaaS company's streaming chat agent occasionally refuses to answer certain prompts, but the on-call dashboard — wired to fire alerts only on API error events — shows zero alerts during a period when refusal volume spiked noticeably. Why are the refusals invisible to this alerting setup?
+
+A. Refusals are a client-side rendering choice and are never actually sent by the model
+B. Refusals arrive on an otherwise successful response stream and fire a dedicated refusal event rather than the API error event, so alerting wired only to error events will never see them
+C. The dashboard is misconfigured to ignore all events with a 200 status code
+D. Refusals only occur in non-streaming requests, so a streaming client would never encounter them
+
+**Answer:** B
+**Explanation:** A refusal is delivered as part of a normal, successful response stream and triggers a distinct refusal event rather than the API error event, so any alerting pipeline that only listens for error events will systematically miss a spike in refusals even though the underlying behavior is a genuine quality signal worth tracking. Refusals are a real model-emitted signal, not a rendering artifact; they are not confined to non-streaming requests; and the root cause here is event-channel selection, not a status-code filtering bug.
+
+### Q17.
+An architect enables what they believe is full request tracing for a Claude Agent SDK deployment by setting a single environment variable, then is surprised when no spans appear in their collector. What is most likely missing, and what should a correctly instrumented trace look like once fixed?
+
+A. Nothing is missing; traces simply take 24 hours to first appear after enabling any setting
+B. Agent SDK telemetry requires both an enabling environment variable and at least one configured exporter before anything is emitted; once correctly configured, a well-formed trace shows a root interaction span per user prompt, with API calls, tool calls, and hook executions as child spans, and any subagent's spans nested under the parent tool span that delegated to it
+C. The SDK always emits telemetry automatically; the collector itself must be broken
+D. Tracing is only available for non-streaming requests, so switching off streaming will make spans appear
+
+**Answer:** B
+**Explanation:** Agent SDK telemetry is off until both an enabling environment variable is set and at least one exporter is configured — a single setting is not sufficient — and the SDK itself emits no telemetry directly, instead passing configuration through to the instrumented process which records the actual spans; a correctly shaped trace has a root interaction span per prompt with API/tool/hook calls as children and subagent spans nested under the delegating tool span. Assuming a fixed delay, assuming automatic emission, or assuming a streaming-related limitation all misdiagnose what is actually a two-part enablement requirement.
+
+### Q18.
+After a prompt-caching cache-miss incident, an engineer uses a cache diagnostics feature that compares the current request against a previous response ID and reports the first point of divergence among the model, system prompt, tools, and message history. The engineer fixes the one reported divergence, confirms the diagnostic no longer flags it, and closes the incident. What risk does this approach carry?
+
+A. None; once the first divergence is fixed, the diagnostic guarantees the cache will hit on every subsequent request
+B. The diagnostic reports only the earliest divergence it finds, so additional, later divergences may still exist but remain hidden behind the first one; the engineer should fix and re-run the comparison rather than fix and assume the issue is fully resolved
+C. Cache diagnostics only evaluate the system prompt, so checking tools and message history separately is redundant
+D. Cache misses cannot be diagnosed this way at all; only full cache read token counts are informative
+
+**Answer:** B
+**Explanation:** Because the diagnostic feature reports only the earliest point of divergence across the model, system prompt, tools, and message history, fixing that one issue and re-checking is necessary — a clean result after a single fix does not guarantee there was only one cause, since later divergences can be masked behind the first. Treating one clean diagnostic run as final proof of resolution risks leaving additional unresolved mismatches in place, the tool explicitly considers more than just the system prompt, and it is more informative than a bare cache-read-token count dropping to zero.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

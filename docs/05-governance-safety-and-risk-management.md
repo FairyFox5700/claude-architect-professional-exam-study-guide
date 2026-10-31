@@ -187,3 +187,36 @@ D. This is only relevant for regulatory compliance, not for safety
 
 **Answer:** B
 **Explanation:** Least-privilege tool scoping is a core safety/risk-management principle precisely because current correct behavior does not guarantee future robustness against injection attacks or edge cases — reducing available capabilities reduces potential harm regardless of present performance. A, C, and D all understate the ongoing risk-mitigation value of this practice.
+
+### Q17.
+A healthcare company enables an enterprise Zero Data Retention arrangement and HIPAA readiness (with a signed BAA) for its Claude-based patient-messaging assistant. Separately, its human-review process routes any flagged message for physician sign-off based on the dollar value of the associated billing code rather than on whether an incorrect message could cause irreversible harm to the patient. An architecture review flags two independent problems. What are they?
+
+A. There is only one problem: the ZDR/BAA setup is sufficient on its own and needs no further action
+B. First, ZDR and HIPAA-readiness coverage must be verified feature-by-feature rather than assumed to apply to every capability the assistant uses; second, routing human review by billing-code dollar value is the wrong axis — review should be routed by whether the message's potential harm is irreversible and how far it could spread, not by transaction size
+C. Both problems are purely regulatory and have no bearing on human-in-the-loop design
+D. Neither is a real problem since HIPAA readiness guarantees blanket coverage and dollar value is always a valid proxy for risk
+
+**Answer:** B
+**Explanation:** This combines two distinct Domain 5 pitfalls: assuming a compliance arrangement (ZDR/BAA) automatically covers every feature in use, and routing human review by a size-based proxy instead of the correct reversibility/blast-radius axis — both must be corrected independently. A and D wrongly assume both setups are already adequate, and C incorrectly treats the human-review flaw as a regulatory-only issue.
+
+### Q18.
+An insurance company's claims chatbot has its safety classifier hardened after a jailbreak incident, but nobody is tracking whether the hardened classifier now blocks legitimate claims questions, and the application still treats every HTTP 200 response as a trustworthy answer without checking for a refusal signal. What combination of gaps does this illustrate?
+
+A. A single gap: the classifier is too strict and should simply be loosened
+B. Two distinct guardrail-quality gaps: the team is not measuring the classifier's false-refusal (over-refusal) rate against legitimate requests to verify it is correctly tuned, and the application is not instrumenting the response's `stop_reason` to detect refusals, so genuine refusal events are silently mishandled
+C. Only a regulatory compliance gap, since classifiers are a legal requirement rather than a technical one
+D. Only a bias/fairness gap, since classifier strictness varies by user
+
+**Answer:** B
+**Explanation:** These are two separate, commonly paired guardrail-engineering gaps: failing to measure over-refusal alongside catch-rate when tuning a classifier, and failing to detect refusal responses (which arrive as HTTP 200 with a distinct stop reason) so they can be handled correctly rather than displayed as normal answers. A oversimplifies to only one issue, and C and D misclassify the nature of the gaps.
+
+### Q19.
+A credit-union's lending-support assistant tends to agree with loan officers' stated assumptions ("since this applicant's income history is obviously stable, approve the higher limit") rather than independently verifying them, and the union's compliance program has not yet determined which of the assistant's recommendations require a qualified reviewer's sign-off and applicant disclosure under high-risk AI recommendation rules. What should the architecture and governance teams address together?
+
+A. Only the sycophancy issue; disclosure and qualified review only matter for fully automated systems, not human-assisted ones
+B. Both issues: mitigate sycophancy by instructing and evaluating the assistant for appropriate disagreement rather than treating loan-officer agreement as validation, and separately classify which recommendations are "wholly favorable" (potentially exempt) versus partial/denied (requiring qualified-reviewer sign-off and applicant disclosure)
+C. Neither issue needs attention since a human loan officer is already in the loop
+D. Only the disclosure issue; sycophancy is a harmless style preference with no risk implications
+
+**Answer:** B
+**Explanation:** These are two separate Domain 5 concerns that commonly co-occur: sycophancy is a model-reliability failure mode requiring explicit evaluation for independent judgment, while the qualified-review/disclosure obligation is a distinct ethical-AI and policy requirement that depends on whether an outcome is wholly favorable or not — both must be addressed, and the presence of a human in the loop does not by itself satisfy either. A, C, and D each dismiss one of the two necessary fixes.

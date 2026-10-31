@@ -171,6 +171,39 @@ D. Use agent-to-agent protocol negotiation, since any tool call between two piec
 **Answer:** B
 **Explanation:** Matching protocol complexity to actual current needs — a single client, no reuse requirement, and a deadline — favors the simpler direct API integration, with the architecturally sound fallback of refactoring to MCP later if the tool's scope genuinely expands to multiple clients. Mandating full MCP infrastructure for every integration regardless of scope or timeline ignores real engineering trade-offs, abandoning automation for manual copy-paste defeats the purpose of building the tool at all, and labeling a simple tool call as "agent-to-agent communication" misapplies a term meant for coordination between autonomous reasoning agents, not a basic utility function call.
 
+### Q16.
+An architect must decide whether a new capability — "generate a weekly sales summary using the company's documented five-step formatting and approval procedure" — should be built as an MCP server or packaged as a Skill (reusable instructions/know-how Claude loads when relevant). The procedure requires no live call to any external system once the raw sales figures are already in context. What is the deciding question, and what is the right answer here?
+
+A. The deciding question is how many steps the procedure has; five or more steps always requires MCP
+B. The deciding question is whether the capability must reach out and talk to another system at the moment it runs — since this procedure fetches nothing live and is purely know-how applied to data already in context, it is Skill-shaped, not MCP-shaped
+C. The deciding question is irrelevant, since MCP and Skills are two names for the same mechanism
+D. The deciding question is which team owns the budget for the integration, since that always determines the protocol choice
+
+**Answer:** B
+**Explanation:** The discriminating test between MCP and a Skill is whether the capability needs a live call to another system at execution time: MCP is for capabilities that must fetch or act on something external while they run, while a Skill packages know-how or a procedure that operates on data already available and needs nothing fetched — this formatting/approval procedure is exactly the latter. Step count has no bearing on the choice, MCP and Skills are distinct mechanisms satisfying different needs (and are frequently confused as distractors for this reason), and budget ownership is an organizational detail, not an architectural discriminator between the two.
+
+### Q17.
+A hospital's IT governance team discovers that, by default, any engineer running a Claude-based coding assistant internally can connect any MCP server they find or build, with no central review of what that server does before it connects to internal clinical systems. Anthropic's own documentation notes it reviews community connectors only against directory-listing criteria and does not security-audit or manage third-party MCP servers. What should the governance team do?
+
+A. Accept the default as sufficient, since Anthropic's directory review functions as a full security audit of every connectable server
+B. Apply the administrative controls documented for this exact scenario: choose from disabling MCP servers entirely, deploying a fixed managed set engineers cannot add to, publishing an approved catalogue, or deliberately leaving engineers unrestricted only where that risk is acceptable — rather than relying on an assumed audit that does not exist
+C. Ban all MCP usage permanently across the organization with no further evaluation, since no middle ground exists
+D. Delegate the decision entirely to each individual engineer, since server selection is a personal productivity choice with no organizational risk
+
+**Answer:** B
+**Explanation:** Because any user can connect any MCP server by default and Anthropic's listing review is not a security audit of what a server actually does, an organization with internal clinical systems at stake needs to deliberately choose among the documented administrative controls — full restriction, a fixed managed set, an approved catalogue, or informed unrestricted access — rather than assume protection that isn't there. Treating directory listing as a security audit is a factual misunderstanding of what Anthropic actually reviews, a blanket permanent ban ignores that lighter-weight governed options exist and are documented for exactly this situation, and leaving the decision entirely to individual engineers abandons organizational responsibility for a risk that clearly has organization-wide consequences.
+
+### Q18.
+A vendor's MCP client application is found to retain and act on the full contents of every other MCP server's conversation turns within the same session, using that cross-server context to decide what to send to a billing server. A reviewer flags this against the protocol's architecture. What principle is being violated?
+
+A. Nothing is violated; MCP has no stated position on what a server can see of the conversation
+B. A core MCP design principle: the host, not individual servers, controls connection permissions and consent, and holds the full conversation history — servers should not be able to read the whole conversation or see into other servers, so cross-server visibility of this kind runs counter to the protocol's intended isolation
+C. This is required behavior, since MCP mandates that all connected servers share full visibility into each other's data for consistency
+D. This only matters if the servers are hosted by different vendors; same-vendor servers are exempt from the isolation principle
+
+**Answer:** B
+**Explanation:** MCP's architecture places the host in control of connection permissions, security policy, and consent, with full conversation history staying at the host level specifically so that individual servers are not able to read the whole conversation or see into other servers — a design principle meant to contain the blast radius of any single server. Claiming MCP has no position on this misstates the documented architecture, the protocol does not mandate shared cross-server visibility (it does the opposite), and the isolation principle is about server boundaries generally, not contingent on whether servers happen to share a vendor.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

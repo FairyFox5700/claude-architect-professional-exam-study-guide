@@ -171,6 +171,28 @@ D. The decision should be based solely on which option the embedding model vendo
 **Answer:** B
 **Explanation:** This is a genuine architectural trade-off: partitioned indexes often improve scale, enforce access boundaries naturally (e.g., per practice area), and can improve relevance precision when queries map cleanly to one domain, while a unified index is simpler to maintain when the corpus is small and permissions are uniform across content — the right choice depends on these concrete factors, not a universal rule. Blanket "always choose A" or "always choose B" rules ignore the real trade-offs, and vendor marketing materials are not an appropriate basis for an architectural decision.
 
+### Q16.
+An engineering team is ingesting a mix of dense financial tables and narrative commentary from scanned 10-K filing PDFs. To save cost, they default every page to text-extraction-only processing, which is roughly seven times cheaper per page than full visual understanding. Users then complain that table values are frequently garbled or misaligned in generated answers. What is the correct remediation?
+
+A. Switch every page in the corpus to full visual understanding regardless of content, since more expensive processing is always safer
+B. Treat the processing mode as a deliberate cost-versus-quality decision per document type: use full visual understanding (which processes each page as both text and image) for pages where layout carries meaning, such as dense tables, and keep cheaper text extraction for plain narrative pages
+C. Keep text-extraction-only for all pages and ask the model to "double-check" table values in the prompt instead
+D. Abandon PDF ingestion entirely and require all filings to be manually retyped into plain text
+
+**Answer:** B
+**Explanation:** PDF processing mode is a cost decision, not a fixed quality setting — text extraction alone is far cheaper but discards layout information, while full visual understanding costs substantially more (on the order of seven times as many tokens for the same pages) but is worth paying specifically where layout carries meaning, such as tables, forms, or diagrams; applying it selectively by content type gets the benefit without paying the premium everywhere. Defaulting everything to the expensive mode wastes spend on narrative-only pages, prompting the model to "double-check" values it never received correctly cannot recover information lost at extraction, and abandoning PDF ingestion entirely discards a solvable problem in favor of an impractical manual process.
+
+### Q17.
+A legal-tech company's RAG system cites entire multi-paragraph pages for every answer, and attorneys complain the citations are too coarse to verify quickly. Separately, a different team assumes that enabling citations on their search-based retrieval tool was automatic and discovers in testing that no citations appear at all. What should the architecture team conclude about both issues?
+
+A. Both issues require only a prompt change asking the model to "cite more precisely" and to "always include citations"
+B. Citation granularity is determined by the boundaries of the retrieval unit supplied — the model cites whole blocks, not substrings within them, so finer citations require splitting content into smaller blocks at ingestion — and citations are disabled by default for search results and must be explicitly enabled, not assumed
+C. Citations are a purely cosmetic UI feature with no connection to how content was chunked or ingested
+D. Both issues can only be fixed by switching to a completely different embedding provider
+
+**Answer:** B
+**Explanation:** Because the minimal citable unit is the block supplied to the model (which cites whole blocks, never substrings), coarse citations are fixed by changing ingestion-time chunk/block boundaries rather than by prompting, and because citations on search results are disabled by default, a team that assumes they are automatic will ship without any attribution until they explicitly enable the behavior. Prompt instructions cannot create citation granularity that the underlying blocks don't support or enable a feature that is off by default, citation behavior is directly tied to how content was structured at ingestion (not purely cosmetic), and the embedding provider is unrelated to either the citation-granularity or citation-enablement problem described.
+
 ---
 
 [← Back to objectives index](README.md) · [Back to main index](../../README.md)

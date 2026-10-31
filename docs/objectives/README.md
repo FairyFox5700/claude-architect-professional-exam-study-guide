@@ -2,7 +2,7 @@
 
 [← Back to main index](../../README.md)
 
-All 38 official task-area objectives for *Claude Certified Architect – Professional (CCAR-P)*, each with its own page of 15 certification-style practice questions.
+All 38 official task-area objectives for *Claude Certified Architect – Professional (CCAR-P)*, each with its own page of certification-style practice questions (15 base questions each, plus supplementary questions added after cross-referencing other independently published CCAR-P study materials to close topic gaps — see the main [README](../../README.md#acknowledgements)).
 
 | # | Domain | Objective | Page |
 |---|--------|-----------|------|
@@ -45,7 +45,7 @@ All 38 official task-area objectives for *Claude Certified Architect – Profess
 | 37 | Developer Productivity & Operational Enablement | Apply Claude Code commands, skills, and automation patterns to improve shared development workflows, including testing, code review, CI/CD integration, and measurable productivity gains across a team. | [obj-37](obj-37-ai-assisted-workflows.md) |
 | 38 | Developer Productivity & Operational Enablement | Troubleshoot Claude Code configuration, MCP server failures, hooks, permissions, context issues, and tool execution failures, and monitor usage and operational behaviour to resolve developer-facing problems. | [obj-38](obj-38-debugging-operational-issues.md) |
 
-**Total: 38 pages × 15 questions = 570 practice questions.**
+**Total: 640 practice questions across 38 pages.**
 
 ---
 
