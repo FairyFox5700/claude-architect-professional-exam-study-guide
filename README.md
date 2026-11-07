@@ -45,6 +45,7 @@ Every page above can also be rendered as a branded, print-ready PDF (Manrope
 typeface, navy/peach/orange color palette) using [`build_pdfs.py`](build_pdfs.py),
 which mirrors the same folder structure under `pdf/`:
 
+- [`Claude-Architect-Professional-Complete-Study-Guide.pdf`](Claude-Architect-Professional-Complete-Study-Guide.pdf) — all 47 Markdown pages combined, with PDF bookmarks
 - `pdf/README.pdf`
 - `pdf/docs/` — the 7 domain pages
 - `pdf/docs/objectives/` — all 38 objective pages + index

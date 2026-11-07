@@ -1,6 +1,6 @@
 import base64, markdown, os, re, json
 
-ROOT = r"C:\Users\ityshchenko\OneDrive - Microsoft\Documents\Microsoft Scout\claude-architect-professional-exam-study-guide"
+ROOT = os.path.dirname(os.path.abspath(__file__))
 HTML_OUT = os.path.join(ROOT, "_pdf_build_html")
 os.makedirs(HTML_OUT, exist_ok=True)
 
